@@ -1,0 +1,34 @@
+- why "path" for things like getVariable? why not just a straight key?
+- I'll do one holistic pass at some point to make sure the verbiage is consistent (ie name vs path vs id)
+
+API:
+
+$scenes
+ - getCurrent()
+- getById(id)
+$self
+ - variables only, no methods
+$program (not sure that this is necessary...)
+ - variables only
+$assets
+ - getByPath(path)
+$objects
+ - getById(id)
+ - getAllByTag(tag)
+$actions
+- getVariable({ object, path, badge? })
+- setVariable({ object, path, value, badge? })
+- fireEvent({ target(s), eventName, payload })
+- spawn({ clone?, variables?, badges? })
+- destroy({ target(s) })
+- goToScene({ scene, variables? })
+- changeFace({ target(s), faceConfig })
+- playAnimation({ target(s), animationName })
+- playSound({ sound })
+
+Questions:
+
+- should the common variables...
+  - be in some namespace called “common” inside of variables
+  - just be in the top level of the variables set, with no concept of namespace within variables (simplest...)
+  - be in a badge applied to all objects called “common”
