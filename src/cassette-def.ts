@@ -14,7 +14,7 @@ interface Controller {
     type: "mouse" | "keyboard" | "gamepad";
 }
 
-interface ShapeFaceConfig {
+export interface LineFaceConfig {
     type: "line";
     length: [number, number];
     color: string;
@@ -23,12 +23,12 @@ interface ShapeFaceConfig {
 
 type Color = string;
 
-interface DynamicFaceConfig {
+export interface DynamicFaceConfig {
     type: "dynamic";
     generator: ($ctx: MethodContext) => any; // TODO: define this return type
 }
 
-interface DynamicTextFaceConfig {
+export interface DynamicTextFaceConfig {
     type: "dynamic-text";
     fontSize: number;
     color: Color;
@@ -36,7 +36,7 @@ interface DynamicTextFaceConfig {
 }
 
 export type FaceConfig =
-    | ShapeFaceConfig
+    | LineFaceConfig
     | DynamicFaceConfig
     | DynamicTextFaceConfig;
 

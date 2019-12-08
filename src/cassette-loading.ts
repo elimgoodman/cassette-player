@@ -5,7 +5,13 @@ import {
     Variable,
     EventHandler as EventHandlerDef,
 } from "./cassette-def";
-import { DynamicObject, Variables, EventHandlers } from "./game-state";
+import _ from "lodash";
+import {
+    DynamicObject,
+    Variables,
+    EventHandlers,
+    CommonVariable,
+} from "./game-state";
 
 const uuidv4 = require("uuid/v4");
 
@@ -39,12 +45,23 @@ function sceneDefToDynObj(sceneDef: Scene): DynamicObject {
     };
 }
 
+function getCommonSceneObjVariables(sceneObj: GameObject): Variables {
+    return {
+        [CommonVariable.X]: 0,
+        [CommonVariable.Y]: 0,
+    };
+}
+
 function sceneObjsToDynObjs(gameObjects: GameObject[]): DynamicObject[] {
     return gameObjects.map(gameObject => {
         return {
             id: gameObject.id,
             uuid: uuidv4(),
-            variables: transformVariables(gameObject.variables),
+            variables: _.merge(
+                {},
+                transformVariables(gameObject.variables),
+                getCommonSceneObjVariables(gameObject)
+            ),
             eventHandlers: transformEventHandlers(gameObject.events),
             face: gameObject.face, // should I clone / transform this at all?
         };

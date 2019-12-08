@@ -124,8 +124,8 @@ const boardScene: Scene = {
             id: "vertical-line",
             face: {
                 type: "line",
-                length: [0, 20],
-                color: "#FFFFFF",
+                length: [200, 20],
+                color: "#000000",
                 width: 2,
             },
         },

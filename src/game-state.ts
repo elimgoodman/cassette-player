@@ -1,14 +1,17 @@
 import {
     Scene,
     CassetteDef,
-    Variable,
-    EventHandler as EventHandlerDef,
     EventHandlerCallback,
     GameObject,
     FaceConfig,
 } from "./cassette-def";
 import _ from "lodash";
 import { cassetteDefToDynObj, sceneDefToDynObjs } from "./cassette-loading";
+
+export enum CommonVariable {
+    X = "X",
+    Y = "Y",
+}
 
 class SceneManager {
     private currentScene: Scene | null = null;
@@ -49,6 +52,12 @@ class DynamicObjectManager {
         this.currentScene = sceneDynObj;
         this.sceneObjects = sceneObjs;
     }
+
+    // FIXME: if this ends up being expensive (we'll prob be calling it a fair bit),
+    // can easily precompute and store
+    public getSceneObjs(): DynamicObject[] {
+        return [this.root, this.currentScene!].concat(this.sceneObjects);
+    }
 }
 
 export class GameState {
@@ -62,6 +71,12 @@ export class GameState {
         this.dynObjManager = new DynamicObjectManager(cassetteDef);
 
         this.loadScene(defaultSceneId);
+    }
+
+    public getRenderableObjects(): DynamicObject[] {
+        return this.dynObjManager
+            .getSceneObjs()
+            .filter(dynObj => !_.isUndefined(dynObj.face));
     }
 
     private loadScene(sceneId: string): void {

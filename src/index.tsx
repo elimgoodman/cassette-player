@@ -8,9 +8,8 @@ import { GameState } from "./game-state";
 // ReactDOM.render(<App />, document.getElementById("root"));
 
 const canvas = document.getElementById("cassette-canvas")! as HTMLCanvasElement;
-const renderContext = canvas.getContext("2d")!;
 const gameState = new GameState(ticTacToe);
 
 requestAnimationFrame(() => {
-    render(gameState, renderContext);
+    render(gameState, canvas);
 });
