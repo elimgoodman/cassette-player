@@ -1,14 +1,16 @@
-import React from "react";
-import ReactDOM from "react-dom";
+// import React from "react";
+// import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App";
-import * as serviceWorker from "./serviceWorker";
-import { ticTacToe } from "./cassette";
+import { ticTacToe } from "./sample-cassette";
+import { render } from "./render";
+import { GameState } from "./game-state";
 
-ReactDOM.render(<App />, document.getElementById("root"));
-console.log(ticTacToe);
+// ReactDOM.render(<App />, document.getElementById("root"));
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+const canvas = document.getElementById("cassette-canvas")! as HTMLCanvasElement;
+const renderContext = canvas.getContext("2d")!;
+const gameState = new GameState(ticTacToe);
+
+requestAnimationFrame(() => {
+    render(gameState, renderContext);
+});

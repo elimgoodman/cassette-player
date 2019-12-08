@@ -1,5 +1,24 @@
 - why "path" for things like getVariable? why not just a straight key?
 - I'll do one holistic pass at some point to make sure the verbiage is consistent (ie name vs path vs id)
+- I really want to clean up the files that come included in create-react-app...one day
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 API:
 
