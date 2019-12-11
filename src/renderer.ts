@@ -3,6 +3,7 @@ import _ from "lodash";
 import { LineFaceConfig, DynamicFaceConfig, FaceConfig } from "./cassette-def";
 import { CommonVariable, DynamicObjectInst, GameState } from "./game-state";
 import { MethodContextMaker } from "./method-context";
+import { AssetManager } from "./asset-manager";
 
 export class Renderer {
     private state: GameState;
@@ -10,11 +11,15 @@ export class Renderer {
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
 
-    constructor(state: GameState, canvas: HTMLCanvasElement) {
+    constructor(
+        state: GameState,
+        canvas: HTMLCanvasElement,
+        assetManager: AssetManager
+    ) {
         this.state = state;
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d")!;
-        this.methodContextMaker = new MethodContextMaker(state);
+        this.methodContextMaker = new MethodContextMaker(state, assetManager);
     }
 
     private clear() {
@@ -55,6 +60,7 @@ export class Renderer {
                 break;
             case "dynamic":
                 this.renderDynamic(dynObj);
+                break;
             default:
                 console.log(`Unimplemented face type: ${face!.type}`);
         }

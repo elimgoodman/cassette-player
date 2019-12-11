@@ -45,6 +45,7 @@ export type FaceConfig =
 export type GameObject = {
     id: string;
     face: FaceConfig;
+    assets?: AssetDef[];
 } & DynamicObjectDef;
 
 export type Scene = {
@@ -76,7 +77,11 @@ export type CassetteDef = {
     defaultSceneId: string;
 } & DynamicObjectDef;
 
-type Asset = any;
+export interface AssetDef {
+    id: string;
+    path: string;
+}
+
 type Target = DynamicObjectInst | DynamicObjectInst[];
 
 export interface GetVariableArgs {
@@ -110,7 +115,7 @@ interface Actions {
 }
 
 interface AssetHelpers {
-    getById(args: { id: string }): Asset;
+    getById(args: { id: string }): any; // FIXME: fix the return type here
 }
 
 // FIXME: what relationship should this have to FaceConfig?

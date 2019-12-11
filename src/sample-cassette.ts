@@ -5,7 +5,6 @@ const gameTile: GameObject = {
     face: {
         type: "dynamic",
         generator: $ctx => {
-            console.log($ctx.self);
             return {
                 type: "line",
                 color: "#AA00AA",
@@ -110,6 +109,10 @@ const gameTile: GameObject = {
                 });
             },
         },
+    ],
+    assets: [
+        { id: "x-image", path: "x-image.png" },
+        { id: "o-image", path: "o-image.png" },
     ],
 };
 
