@@ -128,6 +128,18 @@ const boardScene: Scene = {
                 color: "#000000",
                 width: 2,
             },
+            events: [
+                {
+                    event: "tick",
+                    handler: (_event, $ctx) => {
+                        $ctx.actions.updateVariable({
+                            object: $ctx.self,
+                            path: "x",
+                            updater: x => x + 1,
+                        });
+                    },
+                },
+            ],
         },
         gameTile,
     ],

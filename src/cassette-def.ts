@@ -1,4 +1,6 @@
-interface DynamicObject {
+import { DynamicObjectInst } from "./game-state";
+
+interface DynamicObjectDef {
     variables?: Variable[];
     events?: EventHandler[];
     helpers?: Helper[];
@@ -43,12 +45,12 @@ export type FaceConfig =
 export type GameObject = {
     id: string;
     face: FaceConfig;
-} & DynamicObject;
+} & DynamicObjectDef;
 
 export type Scene = {
     id: string;
     gameObjects: GameObject[];
-} & DynamicObject;
+} & DynamicObjectDef;
 
 export interface Variable {
     name: string;
@@ -56,10 +58,10 @@ export interface Variable {
     value: any;
 }
 
-interface Event {
+export interface Event {
     eventName: string;
-    metadata: any;
-    payload: any;
+    metadata?: any;
+    payload?: any;
 }
 
 export type EventHandlerCallback = ($event: Event, $ctx: MethodContext) => void;
@@ -72,14 +74,14 @@ export type CassetteDef = {
     controllers: Controller[];
     scenes: Scene[];
     defaultSceneId: string;
-} & DynamicObject;
+} & DynamicObjectDef;
 
 type Asset = any;
-type Target = DynamicObject | DynamicObject[];
+type Target = DynamicObjectDef | DynamicObjectDef[];
 
 interface Actions {
     getVariable: (args: {
-        object: DynamicObject;
+        object: DynamicObjectInst;
         path: string;
         badge?: string;
     }) => any;
@@ -89,9 +91,15 @@ interface Actions {
         payload: any;
     }) => any;
     setVariable: (args: {
-        object: DynamicObject;
+        object: DynamicObjectInst;
         path: string;
         value: any;
+        badge?: string;
+    }) => void;
+    updateVariable: (args: {
+        object: DynamicObjectInst;
+        path: string;
+        updater: (val: any) => any;
         badge?: string;
     }) => void;
     goToScene: (args: { sceneId: string; variables?: any }) => void;
@@ -109,7 +117,7 @@ interface ShapeHelpers {
 
 export interface MethodContext {
     actions: Actions;
-    self: DynamicObject;
+    self: DynamicObjectInst;
     helpers: any;
     assets: AssetHelpers;
     shapes: ShapeHelpers;

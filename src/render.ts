@@ -1,5 +1,7 @@
-import { GameState, DynamicObject, CommonVariable } from "./game-state";
+import _ from "lodash";
+
 import { LineFaceConfig } from "./cassette-def";
+import { CommonVariable, DynamicObjectInst, GameState } from "./game-state";
 
 function clear(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -7,7 +9,7 @@ function clear(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
 
 function renderLine(
     ctx: CanvasRenderingContext2D,
-    dynObj: DynamicObject
+    dynObj: DynamicObjectInst
 ): void {
     const face = dynObj.face as LineFaceConfig;
 
@@ -17,17 +19,22 @@ function renderLine(
     const x = dynObj.variables[CommonVariable.X];
     const y = dynObj.variables[CommonVariable.Y];
 
+    const [xLength, yLength] = face.length;
+
     ctx.beginPath();
     ctx.moveTo(x, y);
     ctx.lineWidth = face.width;
-    ctx.lineTo(...face.length);
+    ctx.lineTo(x + xLength, y + yLength);
     ctx.strokeStyle = face.color;
     ctx.stroke();
 }
 
 export function render(state: GameState, canvas: HTMLCanvasElement) {
     const context = canvas.getContext("2d")!;
-    const dynObjs = state.getRenderableObjects();
+
+    const isRenderable = (dynObj: DynamicObjectInst) =>
+        !_.isUndefined(dynObj.face);
+    const dynObjs = state.filterSceneObjects(isRenderable);
 
     clear(canvas, context);
 

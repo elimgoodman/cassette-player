@@ -1,23 +1,26 @@
+import _ from "lodash";
+
 import {
     CassetteDef,
-    Scene,
-    GameObject,
-    Variable,
     EventHandler as EventHandlerDef,
+    GameObject,
+    Scene,
+    Variable,
 } from "./cassette-def";
-import _ from "lodash";
 import {
-    DynamicObject,
-    Variables,
-    EventHandlers,
     CommonVariable,
+    DynamicObjectInst,
+    EventHandlers,
+    Variables,
 } from "./game-state";
 
 const uuidv4 = require("uuid/v4");
 
 const ROOT_ID = "root";
 
-export function cassetteDefToDynObj(cassetteDef: CassetteDef): DynamicObject {
+export function cassetteDefToDynObj(
+    cassetteDef: CassetteDef
+): DynamicObjectInst {
     return {
         id: ROOT_ID,
         uuid: uuidv4(),
@@ -28,7 +31,7 @@ export function cassetteDefToDynObj(cassetteDef: CassetteDef): DynamicObject {
 
 export function sceneDefToDynObjs(
     sceneDef: Scene
-): { sceneDynObj: DynamicObject; sceneObjs: DynamicObject[] } {
+): { sceneDynObj: DynamicObjectInst; sceneObjs: DynamicObjectInst[] } {
     return {
         sceneDynObj: sceneDefToDynObj(sceneDef),
         sceneObjs: sceneObjsToDynObjs(sceneDef.gameObjects),
@@ -36,7 +39,7 @@ export function sceneDefToDynObjs(
 }
 
 // FIXME: dedupe w cassetteDef one - they're identical
-function sceneDefToDynObj(sceneDef: Scene): DynamicObject {
+function sceneDefToDynObj(sceneDef: Scene): DynamicObjectInst {
     return {
         id: sceneDef.id,
         uuid: uuidv4(),
@@ -52,7 +55,7 @@ function getCommonSceneObjVariables(sceneObj: GameObject): Variables {
     };
 }
 
-function sceneObjsToDynObjs(gameObjects: GameObject[]): DynamicObject[] {
+function sceneObjsToDynObjs(gameObjects: GameObject[]): DynamicObjectInst[] {
     return gameObjects.map(gameObject => {
         return {
             id: gameObject.id,
