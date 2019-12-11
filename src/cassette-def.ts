@@ -27,7 +27,7 @@ type Color = string;
 
 export interface DynamicFaceConfig {
     type: "dynamic";
-    generator: ($ctx: MethodContext) => any; // TODO: define this return type
+    generator: ($ctx: MethodContext) => FaceConfig; // TODO: define this return type
 }
 
 export interface DynamicTextFaceConfig {

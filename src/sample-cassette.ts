@@ -5,22 +5,30 @@ const gameTile: GameObject = {
     face: {
         type: "dynamic",
         generator: $ctx => {
-            const boardState = $ctx.helpers.getBoardState();
-            switch (boardState) {
-                case "X":
-                    return $ctx.assets.getById({
-                        id: "x-image",
-                    });
-                case "O":
-                    return $ctx.assets.getById({
-                        id: "o-image",
-                    });
-                default:
-                    return $ctx.shapes.square({
-                        length: 10,
-                        color: "#efefef",
-                    });
-            }
+            console.log($ctx.self);
+            return {
+                type: "line",
+                color: "#AA00AA",
+                length: [40, 40],
+                width: 20,
+            };
+
+            // const boardState = $ctx.helpers.getBoardState();
+            // switch (boardState) {
+            //     case "X":
+            //         return $ctx.assets.getById({
+            //             id: "x-image",
+            //         });
+            //     case "O":
+            //         return $ctx.assets.getById({
+            //             id: "o-image",
+            //         });
+            //     default:
+            //         return $ctx.shapes.square({
+            //             length: 10,
+            //             color: "#efefef",
+            //         });
+            // }
         },
     },
     events: [
