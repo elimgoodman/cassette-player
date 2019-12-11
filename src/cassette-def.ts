@@ -77,7 +77,7 @@ export type CassetteDef = {
 } & DynamicObjectDef;
 
 type Asset = any;
-type Target = DynamicObjectDef | DynamicObjectDef[];
+type Target = DynamicObjectInst | DynamicObjectInst[];
 
 interface Actions {
     getVariable: (args: {
@@ -121,5 +121,5 @@ export interface MethodContext {
     helpers: any;
     assets: AssetHelpers;
     shapes: ShapeHelpers;
-    currentScene: Scene;
+    currentScene: DynamicObjectInst;
 }

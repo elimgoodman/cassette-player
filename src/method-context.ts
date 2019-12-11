@@ -22,7 +22,7 @@ export class MethodContextMaker {
             assets: {
                 getById: unimplemented,
             },
-            currentScene: this.state.getCurrentScene()!,
+            currentScene: this.state.getCurrentSceneDOI(),
             helpers: {},
             self: dynObj,
             shapes: {

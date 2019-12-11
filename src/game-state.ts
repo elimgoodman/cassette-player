@@ -59,6 +59,10 @@ class DynamicObjectManager {
     public getSceneObjs(): DynamicObjectInst[] {
         return [this.root, this.currentScene!].concat(this.sceneObjects);
     }
+
+    public getSceneDOI(): DynamicObjectInst {
+        return this.currentScene!;
+    }
 }
 
 export class GameState {
@@ -80,8 +84,8 @@ export class GameState {
         return this.dynObjManager.getSceneObjs().filter(pred);
     }
 
-    public getCurrentScene() {
-        return this.sceneManager.currentScene;
+    public getCurrentSceneDOI(): DynamicObjectInst {
+        return this.dynObjManager.getSceneDOI();
     }
 
     private loadScene(sceneId: string): void {
