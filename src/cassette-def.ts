@@ -79,23 +79,27 @@ export type CassetteDef = {
 type Asset = any;
 type Target = DynamicObjectInst | DynamicObjectInst[];
 
+export interface GetVariableArgs {
+    object: DynamicObjectInst;
+    path: string;
+    badge?: string;
+}
+
+export interface SetVariableArgs {
+    object: DynamicObjectInst;
+    path: string;
+    value: any;
+    badge?: string;
+}
+
 interface Actions {
-    getVariable: (args: {
-        object: DynamicObjectInst;
-        path: string;
-        badge?: string;
-    }) => any;
+    getVariable: (args: GetVariableArgs) => any;
     fireEvent: (args: {
         target: Target;
         eventName: string;
         payload: any;
     }) => any;
-    setVariable: (args: {
-        object: DynamicObjectInst;
-        path: string;
-        value: any;
-        badge?: string;
-    }) => void;
+    setVariable: (args: SetVariableArgs) => void;
     updateVariable: (args: {
         object: DynamicObjectInst;
         path: string;

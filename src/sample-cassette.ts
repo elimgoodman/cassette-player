@@ -134,7 +134,7 @@ const boardScene: Scene = {
                     handler: (_event, $ctx) => {
                         $ctx.actions.updateVariable({
                             object: $ctx.self,
-                            path: "x",
+                            path: "X",
                             updater: x => x + 1,
                         });
                     },

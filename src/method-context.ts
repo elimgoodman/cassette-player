@@ -1,4 +1,8 @@
-import { MethodContext } from "./cassette-def";
+import {
+    MethodContext,
+    GetVariableArgs,
+    SetVariableArgs,
+} from "./cassette-def";
 import { DynamicObjectInst, GameState } from "./game-state";
 
 const unimplemented = () => {};
@@ -14,10 +18,23 @@ export class MethodContextMaker {
         return {
             actions: {
                 fireEvent: unimplemented,
-                getVariable: unimplemented,
+                getVariable: MethodContextMaker.getVariable.bind(dynObj),
                 goToScene: unimplemented,
-                setVariable: unimplemented,
-                updateVariable: unimplemented,
+                setVariable: MethodContextMaker.setVariable.bind(dynObj),
+                updateVariable: args => {
+                    const { object, path, updater } = args;
+
+                    const old = MethodContextMaker.getVariable({
+                        object,
+                        path,
+                    });
+
+                    MethodContextMaker.setVariable({
+                        object,
+                        path,
+                        value: updater(old),
+                    });
+                },
             },
             assets: {
                 getById: unimplemented,
@@ -29,5 +46,15 @@ export class MethodContextMaker {
                 square: unimplemented,
             },
         };
+    }
+
+    static setVariable(args: SetVariableArgs) {
+        const { path, object, value } = args;
+        object.variables[path] = value;
+    }
+
+    static getVariable(args: GetVariableArgs) {
+        const { object, path } = args;
+        return object.variables[path];
     }
 }
