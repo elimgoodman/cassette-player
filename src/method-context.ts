@@ -4,14 +4,17 @@ import {
     SetVariableArgs,
 } from "./cassette-def";
 import { DynamicObjectInst, GameState } from "./game-state";
+import { AssetManager } from "./asset-manager";
 
 const unimplemented = () => {};
 
 export class MethodContextMaker {
     private state: GameState;
+    private assetManager: AssetManager;
 
-    constructor(state: GameState) {
+    constructor(state: GameState, assetManager: AssetManager) {
         this.state = state;
+        this.assetManager = assetManager;
     }
 
     public make(dynObj: DynamicObjectInst): MethodContext {
@@ -36,13 +39,14 @@ export class MethodContextMaker {
                     });
                 },
             },
-            assets: {
-                getById: unimplemented,
-            },
             currentScene: this.state.getCurrentSceneDOI(),
             helpers: {},
             self: dynObj,
-            shapes: {
+            faces: {
+                image: ({ assetId }) => ({
+                    type: "image",
+                    assetId: assetId,
+                }),
                 square: unimplemented,
             },
         };

@@ -5,13 +5,7 @@ const gameTile: GameObject = {
     face: {
         type: "dynamic",
         generator: $ctx => {
-            console.log($ctx.self);
-            return {
-                type: "line",
-                color: "#AA00AA",
-                length: [40, 40],
-                width: 20,
-            };
+            return $ctx.faces.image({ assetId: "x-image" });
 
             // const boardState = $ctx.helpers.getBoardState();
             // switch (boardState) {
@@ -110,6 +104,10 @@ const gameTile: GameObject = {
                 });
             },
         },
+    ],
+    assets: [
+        { id: "x-image", path: "x-image.png" },
+        { id: "o-image", path: "o-image.png" },
     ],
 };
 

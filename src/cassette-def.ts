@@ -37,14 +37,21 @@ export interface DynamicTextFaceConfig {
     generator: ($ctx: MethodContext) => string;
 }
 
+export interface ImageFaceConfig {
+    type: "image";
+    assetId: string;
+}
+
 export type FaceConfig =
     | LineFaceConfig
     | DynamicFaceConfig
+    | ImageFaceConfig
     | DynamicTextFaceConfig;
 
 export type GameObject = {
     id: string;
     face: FaceConfig;
+    assets?: AssetDef[];
 } & DynamicObjectDef;
 
 export type Scene = {
@@ -76,7 +83,11 @@ export type CassetteDef = {
     defaultSceneId: string;
 } & DynamicObjectDef;
 
-type Asset = any;
+export interface AssetDef {
+    id: string;
+    path: string;
+}
+
 type Target = DynamicObjectInst | DynamicObjectInst[];
 
 export interface GetVariableArgs {
@@ -109,21 +120,15 @@ interface Actions {
     goToScene: (args: { sceneId: string; variables?: any }) => void;
 }
 
-interface AssetHelpers {
-    getById(args: { id: string }): Asset;
-}
-
-// FIXME: what relationship should this have to FaceConfig?
-// TODO: have some kind of color type
-interface ShapeHelpers {
-    square: (args: { length: number; color: string }) => any;
+interface FaceHelpers {
+    square: (args: { length: number; color: Color }) => any;
+    image: (args: { assetId: string }) => ImageFaceConfig;
 }
 
 export interface MethodContext {
     actions: Actions;
     self: DynamicObjectInst;
     helpers: any;
-    assets: AssetHelpers;
-    shapes: ShapeHelpers;
+    faces: FaceHelpers;
     currentScene: DynamicObjectInst;
 }
