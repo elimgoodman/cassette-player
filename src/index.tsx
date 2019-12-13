@@ -11,12 +11,13 @@ import { AssetManager } from "./asset-manager";
 
 const canvas = document.getElementById("cassette-canvas")! as HTMLCanvasElement;
 const gameState = new GameState(ticTacToe);
-const assetManager = new AssetManager(ticTacToe);
-const dispatcher = new EventDispatcher(gameState, assetManager);
-const renderer = new Renderer(gameState, canvas, assetManager);
+const dispatcher = new EventDispatcher(gameState);
+const renderer = new Renderer(gameState, canvas);
+
+AssetManager.init(ticTacToe);
 
 (async () => {
-    await assetManager.loadAll();
+    await AssetManager.getInstance().loadAll();
 })();
 
 const gameLoop = () => {

@@ -22,16 +22,12 @@ export class Renderer {
     private ctx: CanvasRenderingContext2D;
     private assetManager: AssetManager;
 
-    constructor(
-        state: GameState,
-        canvas: HTMLCanvasElement,
-        assetManager: AssetManager
-    ) {
+    constructor(state: GameState, canvas: HTMLCanvasElement) {
         this.state = state;
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d")!;
-        this.methodContextMaker = new MethodContextMaker(state, assetManager);
-        this.assetManager = assetManager;
+        this.methodContextMaker = new MethodContextMaker(state);
+        this.assetManager = AssetManager.getInstance();
     }
 
     private clear() {

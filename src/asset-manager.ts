@@ -3,12 +3,23 @@ import { CassetteDef, AssetDef } from "./cassette-def";
 type LoadedAsset = HTMLImageElement;
 
 export class AssetManager {
-    private cassetteDef: CassetteDef;
+    private static instance: AssetManager;
+    private static cassetteDef: CassetteDef;
     private loadedAssets: { [id: string]: LoadedAsset } = {};
 
-    constructor(cassetteDef: CassetteDef) {
-        this.cassetteDef = cassetteDef;
+    static init(cassetteDef: CassetteDef) {
+        AssetManager.cassetteDef = cassetteDef;
     }
+
+    static getInstance(): AssetManager {
+        if (!AssetManager.instance) {
+            AssetManager.instance = new AssetManager();
+        }
+
+        return AssetManager.instance;
+    }
+
+    private constructor() {}
 
     public getById(id: string): LoadedAsset {
         return this.loadedAssets[id];
@@ -39,7 +50,7 @@ export class AssetManager {
 
     private collectAssetDefs(): AssetDef[] {
         let assetDefs: AssetDef[] = [];
-        this.cassetteDef.scenes.forEach(scene => {
+        AssetManager.cassetteDef.scenes.forEach(scene => {
             scene.gameObjects.forEach(gameObj => {
                 if (gameObj.assets) {
                     assetDefs = assetDefs.concat(gameObj.assets);

@@ -12,9 +12,9 @@ export class MethodContextMaker {
     private state: GameState;
     private assetManager: AssetManager;
 
-    constructor(state: GameState, assetManager: AssetManager) {
+    constructor(state: GameState) {
         this.state = state;
-        this.assetManager = assetManager;
+        this.assetManager = AssetManager.getInstance();
     }
 
     public make(dynObj: DynamicObjectInst): MethodContext {
