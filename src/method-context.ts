@@ -39,15 +39,14 @@ export class MethodContextMaker {
                     });
                 },
             },
-            assets: {
-                getById: (args: { id: string }) => {
-                    return this.assetManager.getById(args.id);
-                },
-            },
             currentScene: this.state.getCurrentSceneDOI(),
             helpers: {},
             self: dynObj,
-            shapes: {
+            faces: {
+                image: ({ assetId }) => ({
+                    type: "image",
+                    assetId: assetId,
+                }),
                 square: unimplemented,
             },
         };
