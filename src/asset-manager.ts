@@ -1,15 +1,16 @@
 import { CassetteDef, AssetDef } from "./cassette-def";
-// const PxLoader = require("pxloader");
+
+type LoadedAsset = HTMLImageElement;
 
 export class AssetManager {
     private cassetteDef: CassetteDef;
-    private loadedAssets: { [id: string]: any } = {};
+    private loadedAssets: { [id: string]: LoadedAsset } = {};
 
     constructor(cassetteDef: CassetteDef) {
         this.cassetteDef = cassetteDef;
     }
 
-    public getById(id: string) {
+    public getById(id: string): LoadedAsset {
         return this.loadedAssets[id];
     }
 
