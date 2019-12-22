@@ -1,13 +1,23 @@
 import { CassetteDef, AssetDef } from "./cassette-def";
+import { CassetteLibrary } from "./cassette-library";
 
 type LoadedAsset = HTMLImageElement;
 
 export class AssetManager {
-    private cassetteDef: CassetteDef;
+    private static instance: AssetManager;
     private loadedAssets: { [id: string]: LoadedAsset } = {};
+    private cassetteDef: CassetteDef;
 
-    constructor(cassetteDef: CassetteDef) {
-        this.cassetteDef = cassetteDef;
+    static getInstance(): AssetManager {
+        if (!AssetManager.instance) {
+            AssetManager.instance = new AssetManager();
+        }
+
+        return AssetManager.instance;
+    }
+
+    private constructor() {
+        this.cassetteDef = CassetteLibrary.getInstance().getCurrentCassette();
     }
 
     public getById(id: string): LoadedAsset {

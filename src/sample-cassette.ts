@@ -77,6 +77,11 @@ const gameTile: GameObject = {
             type: "int",
             value: "0",
         },
+        {
+            name: "scale",
+            type: "float",
+            value: 0.2,
+        },
     ],
     helpers: [
         {
@@ -140,7 +145,7 @@ const boardScene: Scene = {
                     handler: (_event, $ctx) => {
                         $ctx.actions.updateVariable({
                             object: $ctx.self,
-                            path: "X",
+                            path: "x",
                             updater: x => x + 1,
                         });
                     },

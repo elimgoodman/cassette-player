@@ -9,10 +9,12 @@ import {
 import { CommonVariable, DynamicObjectInst, GameState } from "./game-state";
 import { MethodContextMaker } from "./method-context";
 import { AssetManager } from "./asset-manager";
+import { clearLine } from "readline";
 
 interface RenderDetails {
     x: number;
     y: number;
+    scale: number;
 }
 
 export class Renderer {
@@ -22,16 +24,12 @@ export class Renderer {
     private ctx: CanvasRenderingContext2D;
     private assetManager: AssetManager;
 
-    constructor(
-        state: GameState,
-        canvas: HTMLCanvasElement,
-        assetManager: AssetManager
-    ) {
-        this.state = state;
+    constructor(canvas: HTMLCanvasElement) {
+        this.state = GameState.getInstance();
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d")!;
-        this.methodContextMaker = new MethodContextMaker(state, assetManager);
-        this.assetManager = assetManager;
+        this.methodContextMaker = MethodContextMaker.getInstance();
+        this.assetManager = AssetManager.getInstance();
     }
 
     private clear() {
@@ -57,8 +55,15 @@ export class Renderer {
     }
 
     private renderImage(face: ImageFaceConfig, details: RenderDetails) {
+        const { x, y, scale } = details;
         const asset = this.assetManager.getById(face.assetId);
-        this.ctx.drawImage(asset, details.x, details.y);
+        this.ctx.drawImage(
+            asset,
+            x,
+            y,
+            asset.width * scale,
+            asset.height * scale
+        );
     }
 
     private makeRenderDetails(dynObj: DynamicObjectInst): RenderDetails {
@@ -69,6 +74,10 @@ export class Renderer {
             }),
             y: MethodContextMaker.getVariable({
                 path: CommonVariable.X,
+                object: dynObj,
+            }),
+            scale: MethodContextMaker.getVariable({
+                path: CommonVariable.SCALE,
                 object: dynObj,
             }),
         };

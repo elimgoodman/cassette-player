@@ -8,10 +8,12 @@ import {
     Scene,
 } from "./cassette-def";
 import { cassetteDefToDynObj, sceneDefToDynObjs } from "./cassette-loading";
+import { CassetteLibrary } from "./cassette-library";
 
 export enum CommonVariable {
-    X = "X",
-    Y = "Y",
+    X = "x",
+    Y = "y",
+    SCALE = "scale",
 }
 
 class SceneManager {
@@ -69,7 +71,18 @@ export class GameState {
     private sceneManager: SceneManager;
     private dynObjManager: DynamicObjectManager;
 
-    constructor(cassetteDef: CassetteDef) {
+    private static instance: GameState;
+
+    static getInstance(): GameState {
+        if (!GameState.instance) {
+            GameState.instance = new GameState();
+        }
+
+        return GameState.instance;
+    }
+
+    private constructor() {
+        const cassetteDef = CassetteLibrary.getInstance().getCurrentCassette();
         const { scenes: sceneDefs, defaultSceneId } = cassetteDef;
 
         this.sceneManager = new SceneManager(sceneDefs);

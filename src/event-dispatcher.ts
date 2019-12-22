@@ -13,9 +13,19 @@ export class EventDispatcher {
     private state: GameState;
     private methodContextMaker: MethodContextMaker;
 
-    constructor(state: GameState, assetManager: AssetManager) {
-        this.state = state;
-        this.methodContextMaker = new MethodContextMaker(state, assetManager);
+    private static instance: EventDispatcher;
+
+    static getInstance() {
+        if (!EventDispatcher.instance) {
+            EventDispatcher.instance = new EventDispatcher();
+        }
+
+        return EventDispatcher.instance;
+    }
+
+    private constructor() {
+        this.state = GameState.getInstance();
+        this.methodContextMaker = MethodContextMaker.getInstance();
     }
 
     public dispatch(event: Event): void {
