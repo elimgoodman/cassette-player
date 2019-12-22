@@ -52,19 +52,22 @@ function getCommonSceneObjVariables(sceneObj: GameObject): Variables {
     return {
         [CommonVariable.X]: 0,
         [CommonVariable.Y]: 0,
+        [CommonVariable.SCALE]: 1,
     };
 }
 
 function sceneObjsToDynObjs(gameObjects: GameObject[]): DynamicObjectInst[] {
     return gameObjects.map(gameObject => {
+        const variables = _.merge(
+            {},
+            getCommonSceneObjVariables(gameObject),
+            transformVariables(gameObject.variables)
+        );
+
         return {
             id: gameObject.id,
             uuid: uuidv4(),
-            variables: _.merge(
-                {},
-                transformVariables(gameObject.variables),
-                getCommonSceneObjVariables(gameObject)
-            ),
+            variables,
             eventHandlers: transformEventHandlers(gameObject.events),
             face: gameObject.face, // should I clone / transform this at all?
         };

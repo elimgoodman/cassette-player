@@ -6,15 +6,14 @@ import { Renderer } from "./renderer";
 import { GameState } from "./game-state";
 import { EventDispatcher } from "./event-dispatcher";
 import { AssetManager } from "./asset-manager";
+import { CassetteLibrary } from "./cassette-library";
 
 // ReactDOM.render(<App />, document.getElementById("root"));
+CassetteLibrary.init([ticTacToe]);
 
 const canvas = document.getElementById("cassette-canvas")! as HTMLCanvasElement;
-const gameState = new GameState(ticTacToe);
-const dispatcher = new EventDispatcher(gameState);
-const renderer = new Renderer(gameState, canvas);
-
-AssetManager.init(ticTacToe);
+const dispatcher = EventDispatcher.getInstance();
+const renderer = new Renderer(canvas);
 
 (async () => {
     await AssetManager.getInstance().loadAll();

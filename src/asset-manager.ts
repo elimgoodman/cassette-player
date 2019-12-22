@@ -1,15 +1,12 @@
 import { CassetteDef, AssetDef } from "./cassette-def";
+import { CassetteLibrary } from "./cassette-library";
 
 type LoadedAsset = HTMLImageElement;
 
 export class AssetManager {
     private static instance: AssetManager;
-    private static cassetteDef: CassetteDef;
     private loadedAssets: { [id: string]: LoadedAsset } = {};
-
-    static init(cassetteDef: CassetteDef) {
-        AssetManager.cassetteDef = cassetteDef;
-    }
+    private cassetteDef: CassetteDef;
 
     static getInstance(): AssetManager {
         if (!AssetManager.instance) {
@@ -19,7 +16,9 @@ export class AssetManager {
         return AssetManager.instance;
     }
 
-    private constructor() {}
+    private constructor() {
+        this.cassetteDef = CassetteLibrary.getInstance().getCurrentCassette();
+    }
 
     public getById(id: string): LoadedAsset {
         return this.loadedAssets[id];
@@ -50,7 +49,7 @@ export class AssetManager {
 
     private collectAssetDefs(): AssetDef[] {
         let assetDefs: AssetDef[] = [];
-        AssetManager.cassetteDef.scenes.forEach(scene => {
+        this.cassetteDef.scenes.forEach(scene => {
             scene.gameObjects.forEach(gameObj => {
                 if (gameObj.assets) {
                     assetDefs = assetDefs.concat(gameObj.assets);

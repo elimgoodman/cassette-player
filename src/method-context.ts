@@ -12,8 +12,18 @@ export class MethodContextMaker {
     private state: GameState;
     private assetManager: AssetManager;
 
-    constructor(state: GameState) {
-        this.state = state;
+    private static instance: MethodContextMaker;
+
+    static getInstance() {
+        if (!MethodContextMaker.instance) {
+            MethodContextMaker.instance = new MethodContextMaker();
+        }
+
+        return MethodContextMaker.instance;
+    }
+
+    private constructor() {
+        this.state = GameState.getInstance();
         this.assetManager = AssetManager.getInstance();
     }
 
