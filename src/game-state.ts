@@ -6,6 +6,7 @@ import {
     FaceConfig,
     GameObject,
     Scene,
+    MethodContext,
 } from "./cassette-def";
 import { cassetteDefToDynObj, sceneDefToDynObjs } from "./cassette-loading";
 import { CassetteLibrary } from "./cassette-library";
@@ -29,14 +30,18 @@ class SceneManager {
     }
 }
 
+export type HelperCallback = ($ctx: MethodContext) => void;
+
 export type Variables = { [key: string]: any };
 export type EventHandlers = { [eventName: string]: EventHandlerCallback };
+export type Helpers = { [name: string]: HelperCallback };
 
 export interface DynamicObjectInst {
     id: string;
     uuid: string;
     variables: Variables;
     eventHandlers: EventHandlers;
+    helpers: Helpers;
     face?: FaceConfig;
 }
 

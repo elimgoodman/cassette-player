@@ -5,24 +5,21 @@ const gameTile: GameObject = {
     face: {
         type: "dynamic",
         generator: $ctx => {
-            return $ctx.faces.image({ assetId: "x-image" });
-
             // const boardState = $ctx.helpers.getBoardState();
-            // switch (boardState) {
-            //     case "X":
-            //         return $ctx.assets.getById({
-            //             id: "x-image",
-            //         });
-            //     case "O":
-            //         return $ctx.assets.getById({
-            //             id: "o-image",
-            //         });
-            //     default:
-            //         return $ctx.shapes.square({
-            //             length: 10,
-            //             color: "#efefef",
-            //         });
-            // }
+            // return $ctx.faces.image({ assetId: "x-image" });
+
+            const boardState = $ctx.helpers.getBoardState();
+            switch (boardState) {
+                case "X":
+                    $ctx.faces.image({ assetId: "x-image" });
+                case "O":
+                    $ctx.faces.image({ assetId: "o-image" });
+                default:
+                    return $ctx.faces.square({
+                        length: 100,
+                        color: "#aaffaa",
+                    });
+            }
         },
     },
     events: [
@@ -69,17 +66,14 @@ const gameTile: GameObject = {
     variables: [
         {
             name: "boardX",
-            type: "int",
-            value: "0",
+            value: 0,
         },
         {
             name: "boardY",
-            type: "int",
-            value: "0",
+            value: 0,
         },
         {
             name: "scale",
-            type: "float",
             value: 0.2,
         },
     ],
@@ -102,11 +96,12 @@ const gameTile: GameObject = {
                     path: "boardY",
                 });
 
-                // TODO: this probably needs to be more specific to matrices...
-                return getVariable({
+                const boardState = getVariable({
                     object: currentScene,
-                    path: `boardState.${boardX}.${boardY}`,
+                    path: "boardState",
                 });
+
+                return boardState[boardX][boardY];
             },
         },
     ],
@@ -121,12 +116,10 @@ const boardScene: Scene = {
     variables: [
         {
             name: "boardState",
-            type: "matrix",
-            value: [[]], // TODO: generate the right size matrix here
+            value: Array(3).fill(Array(3)), // TODO: generate the right size matrix here
         },
         {
             name: "playerTurn",
-            type: "string",
             value: "player1",
         },
     ],
@@ -215,7 +208,6 @@ export const ticTacToe: CassetteDef = {
             variables: [
                 {
                     name: "winner",
-                    type: "string",
                     value: null,
                 },
             ],

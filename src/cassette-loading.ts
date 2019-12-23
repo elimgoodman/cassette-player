@@ -6,12 +6,14 @@ import {
     GameObject,
     Scene,
     Variable,
+    Helper,
 } from "./cassette-def";
 import {
     CommonVariable,
     DynamicObjectInst,
     EventHandlers,
     Variables,
+    Helpers,
 } from "./game-state";
 
 const uuidv4 = require("uuid/v4");
@@ -26,6 +28,7 @@ export function cassetteDefToDynObj(
         uuid: uuidv4(),
         variables: transformVariables(cassetteDef.variables),
         eventHandlers: transformEventHandlers(cassetteDef.events),
+        helpers: transformHelpers(cassetteDef.helpers),
     };
 }
 
@@ -45,6 +48,7 @@ function sceneDefToDynObj(sceneDef: Scene): DynamicObjectInst {
         uuid: uuidv4(),
         variables: transformVariables(sceneDef.variables),
         eventHandlers: transformEventHandlers(sceneDef.events),
+        helpers: transformHelpers(sceneDef.helpers),
     };
 }
 
@@ -70,11 +74,12 @@ function sceneObjsToDynObjs(gameObjects: GameObject[]): DynamicObjectInst[] {
             variables,
             eventHandlers: transformEventHandlers(gameObject.events),
             face: gameObject.face, // should I clone / transform this at all?
+            helpers: transformHelpers(gameObject.helpers),
         };
     });
 }
 
-function transformVariables(variables: Variable[] | undefined): Variables {
+function transformVariables(variables?: Variable[]): Variables {
     const transformed: Variables = {};
 
     if (variables) {
@@ -86,14 +91,24 @@ function transformVariables(variables: Variable[] | undefined): Variables {
     return transformed;
 }
 
-function transformEventHandlers(
-    events: EventHandlerDef[] | undefined
-): EventHandlers {
+function transformEventHandlers(events?: EventHandlerDef[]): EventHandlers {
     const transformed: Variables = {};
 
     if (events) {
         events.forEach(event => {
             transformed[event.event] = event.handler;
+        });
+    }
+
+    return transformed;
+}
+
+function transformHelpers(helpers?: Helper[]): Helpers {
+    const transformed: Helpers = {};
+
+    if (helpers) {
+        helpers.forEach(helper => {
+            transformed[helper.id] = helper.handler;
         });
     }
 

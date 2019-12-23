@@ -5,6 +5,7 @@ import {
     DynamicFaceConfig,
     FaceConfig,
     ImageFaceConfig,
+    SquareFaceConfig,
 } from "./cassette-def";
 import { CommonVariable, DynamicObjectInst, GameState } from "./game-state";
 import { MethodContextMaker } from "./method-context";
@@ -66,6 +67,14 @@ export class Renderer {
         );
     }
 
+    private renderSquare(face: SquareFaceConfig, details: RenderDetails) {
+        // TODO: implement scale for squares
+        const { x, y } = details;
+        const { color, length } = face;
+        this.ctx.fillStyle = color;
+        this.ctx.fillRect(x, y, x + length, y + length);
+    }
+
     private makeRenderDetails(dynObj: DynamicObjectInst): RenderDetails {
         return {
             x: MethodContextMaker.getVariable({
@@ -94,6 +103,9 @@ export class Renderer {
                 break;
             case "dynamic":
                 this.renderDynamic(face, dynObj);
+                break;
+            case "square":
+                this.renderSquare(face, details);
                 break;
             default:
                 console.log(`Unimplemented face type: ${face!.type}`);

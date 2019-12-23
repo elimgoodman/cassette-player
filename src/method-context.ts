@@ -2,9 +2,11 @@ import {
     MethodContext,
     GetVariableArgs,
     SetVariableArgs,
+    SquareFaceArgs,
 } from "./cassette-def";
 import { DynamicObjectInst, GameState } from "./game-state";
 import { AssetManager } from "./asset-manager";
+import _ from "lodash";
 
 const unimplemented = () => {};
 
@@ -28,7 +30,7 @@ export class MethodContextMaker {
     }
 
     public make(dynObj: DynamicObjectInst): MethodContext {
-        return {
+        const context: MethodContext = {
             actions: {
                 fireEvent: unimplemented,
                 getVariable: MethodContextMaker.getVariable.bind(dynObj),
@@ -50,16 +52,25 @@ export class MethodContextMaker {
                 },
             },
             currentScene: this.state.getCurrentSceneDOI(),
-            helpers: {},
+            helpers: _.mapValues(dynObj.helpers, callback => {
+                return () => {
+                    return callback(context);
+                };
+            }),
             self: dynObj,
             faces: {
                 image: ({ assetId }) => ({
                     type: "image",
                     assetId: assetId,
                 }),
-                square: unimplemented,
+                square: (args: SquareFaceArgs) => ({
+                    type: "square",
+                    ...args,
+                }),
             },
         };
+
+        return context;
     }
 
     static setVariable(args: SetVariableArgs) {
