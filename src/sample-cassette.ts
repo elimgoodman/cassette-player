@@ -5,9 +5,6 @@ const gameTile: GameObject = {
     face: {
         type: "dynamic",
         generator: $ctx => {
-            // const boardState = $ctx.helpers.getBoardState();
-            // return $ctx.faces.image({ assetId: "x-image" });
-
             const boardState = $ctx.helpers.getBoardState();
             switch (boardState) {
                 case "X":
