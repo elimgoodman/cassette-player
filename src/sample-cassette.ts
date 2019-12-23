@@ -76,6 +76,11 @@ const gameTile: GameObject = {
             name: "scale",
             value: 0.2,
         },
+        {
+            name: "scale",
+            type: "float",
+            value: 0.2,
+        },
     ],
     helpers: [
         {
