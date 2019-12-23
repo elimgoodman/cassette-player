@@ -1,4 +1,4 @@
-import { DynamicObjectInst } from "./game-state";
+import { DynamicObjectInst, HelperCallback } from "./game-state";
 
 interface DynamicObjectDef {
     variables?: Variable[];
@@ -6,9 +6,9 @@ interface DynamicObjectDef {
     helpers?: Helper[];
 }
 
-interface Helper {
+export interface Helper {
     id: string;
-    handler: ($ctx: MethodContext) => any; // TODO: what context goes in here?
+    handler: HelperCallback;
 }
 
 interface Controller {
@@ -42,10 +42,17 @@ export interface ImageFaceConfig {
     assetId: string;
 }
 
+export interface SquareFaceConfig {
+    type: "square";
+    length: number;
+    color: Color;
+}
+
 export type FaceConfig =
     | LineFaceConfig
     | DynamicFaceConfig
     | ImageFaceConfig
+    | SquareFaceConfig
     | DynamicTextFaceConfig;
 
 export type GameObject = {
@@ -61,7 +68,6 @@ export type Scene = {
 
 export interface Variable {
     name: string;
-    type: "int" | "float" | "string" | "list" | "map" | "matrix";
     value: any;
 }
 
@@ -120,8 +126,13 @@ interface Actions {
     goToScene: (args: { sceneId: string; variables?: any }) => void;
 }
 
+export interface SquareFaceArgs {
+    length: number;
+    color: Color;
+}
+
 interface FaceHelpers {
-    square: (args: { length: number; color: Color }) => any;
+    square: (args: SquareFaceArgs) => SquareFaceConfig;
     image: (args: { assetId: string }) => ImageFaceConfig;
 }
 
