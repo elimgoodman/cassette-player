@@ -1,4 +1,4 @@
-import { GameObject, Scene, MethodContext, CassetteDef } from "./cassette-def";
+import { CassetteDef, GameObject, MethodContext, Scene } from "./cassette-def";
 
 const gameTile: GameObject = {
     id: "game-tile",
@@ -8,9 +8,9 @@ const gameTile: GameObject = {
             const boardState = $ctx.helpers.getBoardState();
             switch (boardState) {
                 case "X":
-                    $ctx.faces.image({ assetId: "x-image" });
+                    return $ctx.faces.image({ assetId: "x-image" });
                 case "O":
-                    $ctx.faces.image({ assetId: "o-image" });
+                    return $ctx.faces.image({ assetId: "o-image" });
                 default:
                     return $ctx.faces.square({
                         length: 100,
@@ -35,12 +35,13 @@ const gameTile: GameObject = {
                     path: "playerTurn",
                 });
 
-                if ($event.metadata.controllerId !== playerTurn) {
-                    return;
-                }
+                // FIXME: add this back in later
+                // if ($event.metadata.controllerId !== playerTurn) {
+                //     return;
+                // }
 
                 const boardState = helpers.getBoardState();
-                if (boardState !== null) return;
+                if (boardState !== undefined) return;
 
                 fireEvent({
                     target: currentScene,
@@ -71,11 +72,6 @@ const gameTile: GameObject = {
         },
         {
             name: "scale",
-            value: 0.2,
-        },
-        {
-            name: "scale",
-            type: "float",
             value: 0.2,
         },
     ],
@@ -154,10 +150,16 @@ const boardScene: Scene = {
             event: "move-made",
             handler: ($event, $ctx) => {
                 const { x, y, mark } = $event.payload;
+                const boardState = $ctx.actions.getVariable({
+                    object: $ctx.self,
+                    path: "boardState",
+                });
+
+                boardState[x][y] = mark;
                 $ctx.actions.setVariable({
                     object: $ctx.self,
-                    path: `boardState.${x}.${y}`,
-                    value: mark,
+                    path: "boardState",
+                    value: boardState,
                 });
 
                 const winner = $ctx.helpers.checkWinner(); // TODO: implement checkWinner

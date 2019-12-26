@@ -1,9 +1,7 @@
 import _ from "lodash";
-
-import { Event, MethodContext } from "./cassette-def";
+import { Event } from "./cassette-def";
 import { DynamicObjectInst, GameState } from "./game-state";
 import { MethodContextMaker } from "./method-context";
-import { AssetManager } from "./asset-manager";
 
 export class EventDispatcher {
     static TICK_EVENT: Event = {
@@ -38,8 +36,18 @@ export class EventDispatcher {
 
     // TODO: this is cacheable if it becomes expensive
     private getObjsThatHandle(event: Event): DynamicObjectInst[] {
-        return this.state.filterSceneObjects(dynObj => {
+        return this.getTargets(event).filter(dynObj => {
             return _.has(dynObj.eventHandlers, event.eventName);
         });
+    }
+
+    private getTargets(event: Event): DynamicObjectInst[] {
+        if (_.isArray(event.target)) {
+            return event.target;
+        } else if (!_.isNil(event.target)) {
+            return [event.target];
+        }
+
+        return this.state.allSceneObjects();
     }
 }

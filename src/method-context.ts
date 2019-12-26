@@ -1,24 +1,26 @@
+import _ from "lodash";
 import {
-    MethodContext,
+    Event,
     GetVariableArgs,
+    MethodContext,
     SetVariableArgs,
     SquareFaceArgs,
 } from "./cassette-def";
+import { EventDispatcher } from "./event-dispatcher";
 import { DynamicObjectInst, GameState } from "./game-state";
-import { AssetManager } from "./asset-manager";
-import _ from "lodash";
 
 const unimplemented = () => {};
 
 export class MethodContextMaker {
     private state: GameState;
-    private assetManager: AssetManager;
 
     private static instance: MethodContextMaker;
+    private static eventDispatcher: EventDispatcher;
 
     static getInstance() {
         if (!MethodContextMaker.instance) {
             MethodContextMaker.instance = new MethodContextMaker();
+            MethodContextMaker.eventDispatcher = EventDispatcher.getInstance();
         }
 
         return MethodContextMaker.instance;
@@ -26,13 +28,12 @@ export class MethodContextMaker {
 
     private constructor() {
         this.state = GameState.getInstance();
-        this.assetManager = AssetManager.getInstance();
     }
 
     public make(dynObj: DynamicObjectInst): MethodContext {
         const context: MethodContext = {
             actions: {
-                fireEvent: unimplemented,
+                fireEvent: MethodContextMaker.fireEvent.bind(dynObj),
                 getVariable: MethodContextMaker.getVariable.bind(dynObj),
                 goToScene: unimplemented,
                 setVariable: MethodContextMaker.setVariable.bind(dynObj),
@@ -81,5 +82,9 @@ export class MethodContextMaker {
     static getVariable(args: GetVariableArgs) {
         const { object, path } = args;
         return object.variables[path];
+    }
+
+    static fireEvent(event: Event) {
+        return MethodContextMaker.eventDispatcher.dispatch(event);
     }
 }
