@@ -1,16 +1,13 @@
 import _ from "lodash";
-
+import { AssetManager } from "./asset-manager";
 import {
-    LineFaceConfig,
-    DynamicFaceConfig,
-    FaceConfig,
     ImageFaceConfig,
+    LineFaceConfig,
     SquareFaceConfig,
 } from "./cassette-def";
-import { CommonVariable, DynamicObjectInst, GameState } from "./game-state";
-import { MethodContextMaker } from "./method-context";
-import { AssetManager } from "./asset-manager";
-import { clearLine } from "readline";
+import { FaceConfigResolver } from "./face-config-resolver";
+import { DynamicObjectInst, GameState } from "./game-state";
+import { getCommonVars } from "./util";
 
 interface RenderDetails {
     x: number;
@@ -20,17 +17,20 @@ interface RenderDetails {
 
 export class Renderer {
     private state: GameState;
-    private methodContextMaker: MethodContextMaker;
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
     private assetManager: AssetManager;
+    private faceConfigResolver: FaceConfigResolver;
+
+    public static isRenderable = (dynObj: DynamicObjectInst) =>
+        !_.isUndefined(dynObj.face);
 
     constructor(canvas: HTMLCanvasElement) {
         this.state = GameState.getInstance();
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d")!;
-        this.methodContextMaker = MethodContextMaker.getInstance();
         this.assetManager = AssetManager.getInstance();
+        this.faceConfigResolver = FaceConfigResolver.getInstance();
     }
 
     private clear() {
@@ -49,15 +49,10 @@ export class Renderer {
         this.ctx.stroke();
     }
 
-    private renderDynamic(face: DynamicFaceConfig, dynObj: DynamicObjectInst) {
-        const { generator } = face;
-        const generatedFace = generator(this.methodContextMaker.make(dynObj));
-        this.renderFace(generatedFace, dynObj);
-    }
-
     private renderImage(face: ImageFaceConfig, details: RenderDetails) {
         const { x, y, scale } = details;
         const asset = this.assetManager.getById(face.assetId);
+
         this.ctx.drawImage(
             asset,
             x,
@@ -71,38 +66,26 @@ export class Renderer {
         // TODO: implement scale for squares
         const { x, y } = details;
         const { color, length } = face;
+
         this.ctx.fillStyle = color;
-        this.ctx.fillRect(x, y, x + length, y + length);
+        this.ctx.fillRect(x, y, length, length);
     }
 
+    // TODO: this is prob unnecessary given the helper that's in util
     private makeRenderDetails(dynObj: DynamicObjectInst): RenderDetails {
-        return {
-            x: MethodContextMaker.getVariable({
-                path: CommonVariable.X,
-                object: dynObj,
-            }),
-            y: MethodContextMaker.getVariable({
-                path: CommonVariable.X,
-                object: dynObj,
-            }),
-            scale: MethodContextMaker.getVariable({
-                path: CommonVariable.SCALE,
-                object: dynObj,
-            }),
-        };
+        return getCommonVars(dynObj);
     }
 
-    private renderFace(face: FaceConfig, dynObj: DynamicObjectInst) {
+    private renderFace(dynObj: DynamicObjectInst) {
         const details = this.makeRenderDetails(dynObj);
+        const face = this.faceConfigResolver.resolveFaceConfig(dynObj)!;
+
         switch (face.type) {
             case "line":
                 this.renderLine(face, details);
                 break;
             case "image":
                 this.renderImage(face, details);
-                break;
-            case "dynamic":
-                this.renderDynamic(face, dynObj);
                 break;
             case "square":
                 this.renderSquare(face, details);
@@ -113,15 +96,12 @@ export class Renderer {
     }
 
     public render() {
-        const isRenderable = (dynObj: DynamicObjectInst) =>
-            !_.isUndefined(dynObj.face);
-        const dynObjs = this.state.filterSceneObjects(isRenderable);
+        const dynObjs = this.state.filterSceneObjects(Renderer.isRenderable);
 
         this.clear();
 
         dynObjs.forEach(dynObj => {
-            const { face } = dynObj;
-            this.renderFace(face!, dynObj);
+            this.renderFace(dynObj);
         });
     }
 }

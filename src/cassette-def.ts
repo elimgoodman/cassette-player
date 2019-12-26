@@ -27,7 +27,7 @@ type Color = string;
 
 export interface DynamicFaceConfig {
     type: "dynamic";
-    generator: ($ctx: MethodContext) => FaceConfig; // TODO: define this return type
+    generator: ($ctx: MethodContext) => RenderableFaceConfig;
 }
 
 export interface DynamicTextFaceConfig {
@@ -48,11 +48,14 @@ export interface SquareFaceConfig {
     color: Color;
 }
 
-export type FaceConfig =
+export type RenderableFaceConfig =
     | LineFaceConfig
-    | DynamicFaceConfig
     | ImageFaceConfig
-    | SquareFaceConfig
+    | SquareFaceConfig;
+
+export type FaceConfig =
+    | RenderableFaceConfig
+    | DynamicFaceConfig
     | DynamicTextFaceConfig;
 
 export type GameObject = {
@@ -73,6 +76,7 @@ export interface Variable {
 
 export interface Event {
     eventName: string;
+    target?: Target;
     metadata?: any;
     payload?: any;
 }
@@ -111,11 +115,7 @@ export interface SetVariableArgs {
 
 interface Actions {
     getVariable: (args: GetVariableArgs) => any;
-    fireEvent: (args: {
-        target: Target;
-        eventName: string;
-        payload: any;
-    }) => any;
+    fireEvent: (event: Event) => any;
     setVariable: (args: SetVariableArgs) => void;
     updateVariable: (args: {
         object: DynamicObjectInst;

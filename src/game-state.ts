@@ -1,15 +1,13 @@
 import _ from "lodash";
-
 import {
     CassetteDef,
     EventHandlerCallback,
     FaceConfig,
-    GameObject,
-    Scene,
     MethodContext,
+    Scene,
 } from "./cassette-def";
-import { cassetteDefToDynObj, sceneDefToDynObjs } from "./cassette-loading";
 import { CassetteLibrary } from "./cassette-library";
+import { cassetteDefToDynObj, sceneDefToDynObjs } from "./cassette-loading";
 
 export enum CommonVariable {
     X = "x",
@@ -100,6 +98,10 @@ export class GameState {
         pred: (obj: DynamicObjectInst) => boolean
     ): DynamicObjectInst[] {
         return this.dynObjManager.getSceneObjs().filter(pred);
+    }
+
+    public allSceneObjects(): DynamicObjectInst[] {
+        return this.dynObjManager.getSceneObjs();
     }
 
     public getCurrentSceneDOI(): DynamicObjectInst {

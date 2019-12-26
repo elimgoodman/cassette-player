@@ -13,7 +13,5 @@ code {
 }
 
 #cassette-canvas {
-    width: 90%;
-    height: 480px;
     border: 1px solid black;
 }
