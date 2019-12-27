@@ -1,3 +1,4 @@
+import { DynoFinder } from "./dyno-finder";
 import { DynoInst, HelperCallback } from "./game-state";
 
 interface DynoDef {
@@ -32,7 +33,7 @@ export interface DynamicFaceConfig {
 
 export interface DynamicTextFaceConfig {
     type: "dynamic-text";
-    fontSize: number;
+    fontSize: number; // TODO: maybe refactor this out, what with TextFaceConfig below....
     color: Color;
     generator: ($ctx: MethodContext) => string;
 }
@@ -48,9 +49,17 @@ export interface SquareFaceConfig {
     color: Color;
 }
 
+export interface TextFaceConfig {
+    type: "text";
+    color: Color;
+    text: string;
+    fontSize: number;
+}
+
 export type RenderableFaceConfig =
     | LineFaceConfig
     | ImageFaceConfig
+    | TextFaceConfig
     | SquareFaceConfig;
 
 export type FaceConfig =
@@ -142,4 +151,5 @@ export interface MethodContext {
     helpers: any;
     faces: FaceHelpers;
     currentScene: DynoInst;
+    dynos: DynoFinder;
 }

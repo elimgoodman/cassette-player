@@ -144,6 +144,31 @@ const boardScene: Scene = {
             ],
         },
         gameTile,
+        {
+            id: "test-text",
+            face: {
+                type: "dynamic-text",
+                color: "#000000",
+                fontSize: 30,
+                generator: $ctx => {
+                    const line = $ctx.dynos.getById("vertical-line")!;
+                    return $ctx.actions.getVariable({
+                        object: line,
+                        path: "x",
+                    });
+                },
+            },
+            variables: [
+                {
+                    name: "x",
+                    value: 100,
+                },
+                {
+                    name: "y",
+                    value: 100,
+                },
+            ],
+        },
     ],
     events: [
         {

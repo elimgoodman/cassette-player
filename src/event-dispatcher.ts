@@ -36,6 +36,8 @@ export class EventDispatcher {
 
     // TODO: this is cacheable if it becomes expensive
     private getObjsThatHandle(event: Event): DynoInst[] {
+        // console.log(event);
+        // console.log(this.getTargets(event));
         return this.getTargets(event).filter(dynObj => {
             return _.has(dynObj.eventHandlers, event.eventName);
         });

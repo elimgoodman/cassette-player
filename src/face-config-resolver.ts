@@ -22,12 +22,19 @@ export class FaceConfigResolver {
             return null;
         }
 
+        const ctx = this.contextMaker.make(dyno);
         switch (face.type) {
             case "dynamic":
-                const { generator } = face;
-                return generator(this.contextMaker.make(dyno));
+                return face.generator(ctx);
+            case "dynamic-text":
+                const text = face.generator(ctx);
+                return {
+                    ...face,
+                    type: "text",
+                    text,
+                };
             default:
-                return face as RenderableFaceConfig;
+                return face;
         }
     }
 }

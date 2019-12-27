@@ -6,6 +6,7 @@ import {
     SetVariableArgs,
     SquareFaceArgs,
 } from "./cassette-def";
+import { DynoFinder } from "./dyno-finder";
 import { EventDispatcher } from "./event-dispatcher";
 import { DynoInst, GameState } from "./game-state";
 
@@ -13,6 +14,7 @@ const unimplemented = () => {};
 
 export class MethodContextMaker {
     private state: GameState;
+    private dynoFinder: DynoFinder;
 
     private static instance: MethodContextMaker;
     private static eventDispatcher: EventDispatcher;
@@ -28,6 +30,7 @@ export class MethodContextMaker {
 
     private constructor() {
         this.state = GameState.getInstance();
+        this.dynoFinder = DynoFinder.getInstance();
     }
 
     public make(dynObj: DynoInst): MethodContext {
@@ -69,6 +72,7 @@ export class MethodContextMaker {
                     ...args,
                 }),
             },
+            dynos: this.dynoFinder,
         };
 
         return context;

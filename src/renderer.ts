@@ -4,6 +4,7 @@ import {
     ImageFaceConfig,
     LineFaceConfig,
     SquareFaceConfig,
+    TextFaceConfig,
 } from "./cassette-def";
 import { FaceConfigResolver } from "./face-config-resolver";
 import { DynoInst, GameState } from "./game-state";
@@ -71,6 +72,14 @@ export class Renderer {
         this.ctx.fillRect(x, y, length, length);
     }
 
+    private renderText(face: TextFaceConfig, details: RenderDetails) {
+        const { text, fontSize, color } = face;
+        const { x, y } = details;
+        this.ctx.font = `${fontSize}px serif`;
+        this.ctx.fillStyle = color;
+        this.ctx.fillText(text, x, y);
+    }
+
     // TODO: this is prob unnecessary given the helper that's in util
     private makeRenderDetails(dynObj: DynoInst): RenderDetails {
         return getCommonVars(dynObj);
@@ -89,6 +98,9 @@ export class Renderer {
                 break;
             case "square":
                 this.renderSquare(face, details);
+                break;
+            case "text":
+                this.renderText(face, details);
                 break;
             default:
                 console.log(`Unimplemented face type: ${face!.type}`);
