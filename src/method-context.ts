@@ -13,8 +13,6 @@ import { EventDispatcher } from "./event-dispatcher";
 import { DynoInst } from "./game-state";
 import { SceneManager } from "./scene-manager";
 
-const unimplemented = () => {};
-
 export class MethodContextMaker {
     private dynoFinder: DynoFinder;
     private sceneManager: SceneManager;

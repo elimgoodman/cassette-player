@@ -3,7 +3,7 @@ import {
     GameObject,
     MethodContext,
     SceneDef,
-} from "./cassette-def";
+} from "../cassette-def";
 
 const gameTile: GameObject = {
     id: "game-tile",

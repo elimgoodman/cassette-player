@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { Event } from "./cassette-def";
 import { DynoManager } from "./dyno-manager";
-import { DynoInst } from "./game-state";
+import { DynoInst, EventHandlers } from "./game-state";
 import { MethodContextMaker } from "./method-context";
 
 export class EventDispatcher {
@@ -30,16 +30,29 @@ export class EventDispatcher {
     public dispatch(event: Event): void {
         const objs = this.getObjsThatHandle(event);
         objs.forEach(obj => {
-            const handler = obj.eventHandlers[event.eventName]!;
+            const handler = this.gatherHandlers(obj)[event.eventName]!;
             handler(event, this.methodContextMaker.make(obj));
         });
     }
 
     // TODO: this is cacheable if it becomes expensive
     private getObjsThatHandle(event: Event): DynoInst[] {
-        return this.getTargets(event).filter(dynObj => {
-            return _.has(dynObj.eventHandlers, event.eventName);
+        return this.getTargets(event).filter(dyno => {
+            const handlers = this.gatherHandlers(dyno);
+            return _.has(handlers, event.eventName);
         });
+    }
+
+    // TODO: also very cacheable!
+    private gatherHandlers(dyno: DynoInst): EventHandlers {
+        let { eventHandlers } = dyno;
+        if (dyno.badges) {
+            _.each(dyno.badges, (badge, id) => {
+                _.merge(eventHandlers, badge.eventHandlers);
+            });
+        }
+
+        return eventHandlers;
     }
 
     private getTargets(event: Event): DynoInst[] {

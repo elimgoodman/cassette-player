@@ -14,7 +14,7 @@ export function getCommonVars(dyno: DynoInst): CommonVars {
             object: dyno,
         }),
         y: MethodContextMaker.getVariable({
-            path: CommonVariable.X,
+            path: CommonVariable.Y,
             object: dyno,
         }),
         scale: MethodContextMaker.getVariable({

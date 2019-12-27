@@ -5,6 +5,7 @@ interface DynoDef {
     variables?: Variable[];
     events?: EventHandler[];
     helpers?: Helper[];
+    badges?: Badge[];
 }
 
 export interface Helper {
@@ -49,6 +50,13 @@ export interface SquareFaceConfig {
     color: Color;
 }
 
+export interface RectFaceConfig {
+    type: "rect";
+    width: number;
+    height: number;
+    color: Color;
+}
+
 export interface TextFaceConfig {
     type: "text";
     color: Color;
@@ -60,6 +68,7 @@ export type RenderableFaceConfig =
     | LineFaceConfig
     | ImageFaceConfig
     | TextFaceConfig
+    | RectFaceConfig
     | SquareFaceConfig;
 
 export type FaceConfig =
@@ -157,4 +166,12 @@ export interface MethodContext {
     faces: FaceHelpers;
     currentScene: DynoInst;
     dynos: DynoFinder;
+}
+
+// FIXME: this is the exact same as DynoDef...
+export interface Badge {
+    id: string;
+    variables?: Variable[];
+    events?: EventHandler[];
+    helpers?: Helper[];
 }

@@ -15,6 +15,13 @@ export type HelperCallback = ($ctx: MethodContext) => void;
 export type Variables = { [key: string]: any };
 export type EventHandlers = { [eventName: string]: EventHandlerCallback };
 export type Helpers = { [name: string]: HelperCallback };
+export type Badges = {
+    [id: string]: {
+        variables?: Variables;
+        eventHandlers?: EventHandlers;
+        helpers?: Helpers;
+    };
+};
 
 export interface DynoInst {
     id: string;
@@ -23,4 +30,5 @@ export interface DynoInst {
     eventHandlers: EventHandlers;
     helpers: Helpers;
     face?: FaceConfig;
+    badges?: Badges;
 }

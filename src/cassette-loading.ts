@@ -1,5 +1,6 @@
 import _ from "lodash";
 import {
+    Badge,
     CassetteDef,
     EventHandler as EventHandlerDef,
     GameObject,
@@ -8,6 +9,7 @@ import {
     Variable,
 } from "./cassette-def";
 import {
+    Badges,
     CommonVariable,
     DynoInst,
     EventHandlers,
@@ -26,6 +28,7 @@ export function cassetteDefToDynObj(cassetteDef: CassetteDef): DynoInst {
         variables: transformVariables(cassetteDef.variables),
         eventHandlers: transformEventHandlers(cassetteDef.events),
         helpers: transformHelpers(cassetteDef.helpers),
+        badges: transformBadges(cassetteDef.badges),
     };
 }
 
@@ -46,6 +49,7 @@ function sceneDefToDynObj(sceneDef: SceneDef): DynoInst {
         variables: transformVariables(sceneDef.variables),
         eventHandlers: transformEventHandlers(sceneDef.events),
         helpers: transformHelpers(sceneDef.helpers),
+        badges: transformBadges(sceneDef.badges),
     };
 }
 
@@ -72,6 +76,7 @@ function sceneObjsToDynObjs(gameObjects: GameObject[]): DynoInst[] {
             eventHandlers: transformEventHandlers(gameObject.events),
             face: gameObject.face, // should I clone / transform this at all?
             helpers: transformHelpers(gameObject.helpers),
+            badges: transformBadges(gameObject.badges),
         };
     });
 }
@@ -106,6 +111,22 @@ function transformHelpers(helpers?: Helper[]): Helpers {
     if (helpers) {
         helpers.forEach(helper => {
             transformed[helper.id] = helper.handler;
+        });
+    }
+
+    return transformed;
+}
+
+function transformBadges(badges?: Badge[]): Badges {
+    const transformed: Badges = {};
+
+    if (badges) {
+        badges.forEach(badge => {
+            transformed[badge.id] = {
+                eventHandlers: transformEventHandlers(badge.events),
+                helpers: transformHelpers(badge.helpers),
+                variables: transformVariables(badge.variables),
+            };
         });
     }
 

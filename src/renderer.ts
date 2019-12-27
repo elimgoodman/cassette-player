@@ -3,6 +3,7 @@ import { AssetManager } from "./asset-manager";
 import {
     ImageFaceConfig,
     LineFaceConfig,
+    RectFaceConfig,
     SquareFaceConfig,
     TextFaceConfig,
 } from "./cassette-def";
@@ -73,6 +74,15 @@ export class Renderer {
         this.ctx.fillRect(x, y, length, length);
     }
 
+    private renderRect(face: RectFaceConfig, details: RenderDetails) {
+        // TODO: implement scale for squares
+        const { x, y } = details;
+        const { color, width, height } = face;
+
+        this.ctx.fillStyle = color;
+        this.ctx.fillRect(x, y, width, height);
+    }
+
     private renderText(face: TextFaceConfig, details: RenderDetails) {
         const { text, fontSize, color } = face;
         const { x, y } = details;
@@ -100,11 +110,12 @@ export class Renderer {
             case "square":
                 this.renderSquare(face, details);
                 break;
+            case "rect":
+                this.renderRect(face, details);
+                break;
             case "text":
                 this.renderText(face, details);
                 break;
-            default:
-                console.log(`Unimplemented face type: ${face!.type}`);
         }
     }
 
