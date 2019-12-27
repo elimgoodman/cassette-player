@@ -73,7 +73,7 @@ export type GameObject = {
     assets?: AssetDef[];
 } & DynoDef;
 
-export type Scene = {
+export type SceneDef = {
     id: string;
     gameObjects: GameObject[];
 } & DynoDef;
@@ -98,7 +98,7 @@ export interface EventHandler {
 
 export type CassetteDef = {
     controllers: Controller[];
-    scenes: Scene[];
+    scenes: SceneDef[];
     defaultSceneId: string;
 } & DynoDef;
 
@@ -122,6 +122,11 @@ export interface SetVariableArgs {
     badge?: string;
 }
 
+export interface GoToSceneArgs {
+    sceneId: string;
+    variables?: any;
+}
+
 interface Actions {
     getVariable: (args: GetVariableArgs) => any;
     fireEvent: (event: Event) => any;
@@ -132,7 +137,7 @@ interface Actions {
         updater: (val: any) => any;
         badge?: string;
     }) => void;
-    goToScene: (args: { sceneId: string; variables?: any }) => void;
+    goToScene: (args: GoToSceneArgs) => void;
 }
 
 export interface SquareFaceArgs {

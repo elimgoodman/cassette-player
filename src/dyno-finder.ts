@@ -1,11 +1,12 @@
 import _ from "lodash";
-import { DynoInst, GameState } from "./game-state";
+import { DynoManager } from "./dyno-manager";
+import { DynoInst } from "./game-state";
 
 export class DynoFinder {
-    private state: GameState;
+    private dynoManager: DynoManager;
     private static instance: DynoFinder;
     private constructor() {
-        this.state = GameState.getInstance();
+        this.dynoManager = DynoManager.getInstance();
     }
 
     public static getInstance(): DynoFinder {
@@ -18,10 +19,10 @@ export class DynoFinder {
 
     public getById(id: string): DynoInst | undefined {
         // FIXME: also this is almost definitely terrible perf-wise!
-        return _.find(this.state.allSceneObjects(), obj => obj.id === id);
+        return _.find(this.dynoManager.allSceneDynos(), obj => obj.id === id);
     }
 
     public filter(pred: (obj: DynoInst) => boolean): DynoInst[] {
-        return this.state.allSceneObjects().filter(pred);
+        return this.dynoManager.allSceneDynos().filter(pred);
     }
 }

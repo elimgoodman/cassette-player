@@ -2,19 +2,23 @@ import _ from "lodash";
 import {
     Event,
     GetVariableArgs,
+    GoToSceneArgs,
     MethodContext,
     SetVariableArgs,
     SquareFaceArgs,
 } from "./cassette-def";
 import { DynoFinder } from "./dyno-finder";
+import { DynoManager } from "./dyno-manager";
 import { EventDispatcher } from "./event-dispatcher";
-import { DynoInst, GameState } from "./game-state";
+import { DynoInst } from "./game-state";
+import { SceneManager } from "./scene-manager";
 
 const unimplemented = () => {};
 
 export class MethodContextMaker {
-    private state: GameState;
     private dynoFinder: DynoFinder;
+    private sceneManager: SceneManager;
+    private dynoManager: DynoManager;
 
     private static instance: MethodContextMaker;
     private static eventDispatcher: EventDispatcher;
@@ -29,8 +33,9 @@ export class MethodContextMaker {
     }
 
     private constructor() {
-        this.state = GameState.getInstance();
         this.dynoFinder = DynoFinder.getInstance();
+        this.sceneManager = SceneManager.getInstance();
+        this.dynoManager = DynoManager.getInstance();
     }
 
     public make(dynObj: DynoInst): MethodContext {
@@ -38,7 +43,7 @@ export class MethodContextMaker {
             actions: {
                 fireEvent: MethodContextMaker.fireEvent.bind(dynObj),
                 getVariable: MethodContextMaker.getVariable.bind(dynObj),
-                goToScene: unimplemented,
+                goToScene: args => this.goToScene(args),
                 setVariable: MethodContextMaker.setVariable.bind(dynObj),
                 updateVariable: args => {
                     const { object, path, updater } = args;
@@ -55,7 +60,7 @@ export class MethodContextMaker {
                     });
                 },
             },
-            currentScene: this.state.getCurrentSceneDOI(),
+            currentScene: this.dynoManager.getSceneDyno(),
             helpers: _.mapValues(dynObj.helpers, callback => {
                 return () => {
                     return callback(context);
@@ -78,6 +83,9 @@ export class MethodContextMaker {
         return context;
     }
 
+    // FIXME: I don't think these should be static...
+    // Oh - they're this way because other things call them
+    // refactor!
     static setVariable(args: SetVariableArgs) {
         const { path, object, value } = args;
         object.variables[path] = value;
@@ -90,5 +98,10 @@ export class MethodContextMaker {
 
     static fireEvent(event: Event) {
         return MethodContextMaker.eventDispatcher.dispatch(event);
+    }
+
+    private goToScene(args: GoToSceneArgs) {
+        const { sceneId, variables } = args;
+        this.sceneManager.goToScene(sceneId, variables);
     }
 }

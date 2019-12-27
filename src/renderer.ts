@@ -8,7 +8,7 @@ import {
 } from "./cassette-def";
 import { DynoFinder } from "./dyno-finder";
 import { FaceConfigResolver } from "./face-config-resolver";
-import { DynoInst, GameState } from "./game-state";
+import { DynoInst } from "./game-state";
 import { getCommonVars } from "./util";
 
 interface RenderDetails {
@@ -18,7 +18,6 @@ interface RenderDetails {
 }
 
 export class Renderer {
-    private state: GameState;
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
     private assetManager: AssetManager;
@@ -29,7 +28,6 @@ export class Renderer {
         !_.isUndefined(dynObj.face);
 
     constructor(canvas: HTMLCanvasElement) {
-        this.state = GameState.getInstance();
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d")!;
         this.assetManager = AssetManager.getInstance();

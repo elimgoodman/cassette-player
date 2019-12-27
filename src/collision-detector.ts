@@ -1,7 +1,7 @@
 import { AssetManager } from "./asset-manager";
 import { DynoFinder } from "./dyno-finder";
 import { FaceConfigResolver } from "./face-config-resolver";
-import { DynoInst, GameState } from "./game-state";
+import { DynoInst } from "./game-state";
 import { Renderer } from "./renderer";
 import { getCommonVars } from "./util";
 
@@ -13,7 +13,6 @@ interface Rect {
 }
 
 export class CollisionDetector {
-    private state: GameState;
     private faceConfigResolver: FaceConfigResolver;
     private assetManager: AssetManager;
     private dynoFinder: DynoFinder;
@@ -21,7 +20,6 @@ export class CollisionDetector {
     private static instance: CollisionDetector;
 
     private constructor() {
-        this.state = GameState.getInstance();
         this.faceConfigResolver = FaceConfigResolver.getInstance();
         this.assetManager = AssetManager.getInstance();
         this.dynoFinder = DynoFinder.getInstance();

@@ -1,6 +1,7 @@
 import _ from "lodash";
 import { Event } from "./cassette-def";
-import { DynoInst, GameState } from "./game-state";
+import { DynoManager } from "./dyno-manager";
+import { DynoInst } from "./game-state";
 import { MethodContextMaker } from "./method-context";
 
 export class EventDispatcher {
@@ -8,7 +9,7 @@ export class EventDispatcher {
         eventName: "tick",
     };
 
-    private state: GameState;
+    private dynoManager: DynoManager;
     private methodContextMaker: MethodContextMaker;
 
     private static instance: EventDispatcher;
@@ -22,8 +23,8 @@ export class EventDispatcher {
     }
 
     private constructor() {
-        this.state = GameState.getInstance();
         this.methodContextMaker = MethodContextMaker.getInstance();
+        this.dynoManager = DynoManager.getInstance();
     }
 
     public dispatch(event: Event): void {
@@ -36,8 +37,6 @@ export class EventDispatcher {
 
     // TODO: this is cacheable if it becomes expensive
     private getObjsThatHandle(event: Event): DynoInst[] {
-        // console.log(event);
-        // console.log(this.getTargets(event));
         return this.getTargets(event).filter(dynObj => {
             return _.has(dynObj.eventHandlers, event.eventName);
         });
@@ -50,6 +49,6 @@ export class EventDispatcher {
             return [event.target];
         }
 
-        return this.state.allSceneObjects();
+        return this.dynoManager.allSceneDynos();
     }
 }

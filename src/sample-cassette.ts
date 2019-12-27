@@ -1,4 +1,9 @@
-import { CassetteDef, GameObject, MethodContext, Scene } from "./cassette-def";
+import {
+    CassetteDef,
+    GameObject,
+    MethodContext,
+    SceneDef,
+} from "./cassette-def";
 
 const gameTile: GameObject = {
     id: "game-tile",
@@ -109,7 +114,7 @@ const gameTile: GameObject = {
     ],
 };
 
-const boardScene: Scene = {
+const boardScene: SceneDef = {
     id: "game-board",
     variables: [
         {
@@ -202,6 +207,7 @@ const boardScene: Scene = {
             id: "checkWinner",
             handler: $ctx => {
                 // FIXME: IMPLEMENT
+                return true;
             },
         },
     ],
@@ -223,15 +229,25 @@ export const ticTacToe: CassetteDef = {
                         type: "dynamic-text",
                         generator: $ctx => {
                             const winner = $ctx.actions.getVariable({
-                                object: $ctx.self,
+                                object: $ctx.currentScene,
                                 path: "winner",
                             });
 
                             return `${winner} is the winner!`;
                         },
-                        fontSize: 12,
-                        color: "#000000",
+                        fontSize: 18,
+                        color: "#333333",
                     },
+                    variables: [
+                        {
+                            name: "x",
+                            value: 10,
+                        },
+                        {
+                            name: "y",
+                            value: 10,
+                        },
+                    ],
                 },
             ],
             variables: [

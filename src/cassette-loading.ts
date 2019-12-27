@@ -4,7 +4,7 @@ import {
     EventHandler as EventHandlerDef,
     GameObject,
     Helper,
-    Scene,
+    SceneDef,
     Variable,
 } from "./cassette-def";
 import {
@@ -30,7 +30,7 @@ export function cassetteDefToDynObj(cassetteDef: CassetteDef): DynoInst {
 }
 
 export function sceneDefToDynObjs(
-    sceneDef: Scene
+    sceneDef: SceneDef
 ): { sceneDynObj: DynoInst; sceneObjs: DynoInst[] } {
     return {
         sceneDynObj: sceneDefToDynObj(sceneDef),
@@ -39,7 +39,7 @@ export function sceneDefToDynObjs(
 }
 
 // FIXME: dedupe w cassetteDef one - they're identical
-function sceneDefToDynObj(sceneDef: Scene): DynoInst {
+function sceneDefToDynObj(sceneDef: SceneDef): DynoInst {
     return {
         id: sceneDef.id,
         uuid: uuidv4(),
