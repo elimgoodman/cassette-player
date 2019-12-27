@@ -94,10 +94,6 @@ export class GameState {
         this.loadScene(defaultSceneId);
     }
 
-    public filterSceneObjects(pred: (obj: DynoInst) => boolean): DynoInst[] {
-        return this.dynObjManager.getSceneObjs().filter(pred);
-    }
-
     public allSceneObjects(): DynoInst[] {
         return this.dynObjManager.getSceneObjs();
     }

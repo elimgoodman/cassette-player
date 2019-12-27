@@ -20,4 +20,8 @@ export class DynoFinder {
         // FIXME: also this is almost definitely terrible perf-wise!
         return _.find(this.state.allSceneObjects(), obj => obj.id === id);
     }
+
+    public filter(pred: (obj: DynoInst) => boolean): DynoInst[] {
+        return this.state.allSceneObjects().filter(pred);
+    }
 }

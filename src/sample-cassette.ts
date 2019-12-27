@@ -114,7 +114,7 @@ const boardScene: Scene = {
     variables: [
         {
             name: "boardState",
-            value: Array(3).fill(Array(3)), // TODO: generate the right size matrix here
+            value: Array(3).fill(Array(3)),
         },
         {
             name: "playerTurn",

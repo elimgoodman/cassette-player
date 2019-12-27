@@ -6,6 +6,7 @@ import {
     SquareFaceConfig,
     TextFaceConfig,
 } from "./cassette-def";
+import { DynoFinder } from "./dyno-finder";
 import { FaceConfigResolver } from "./face-config-resolver";
 import { DynoInst, GameState } from "./game-state";
 import { getCommonVars } from "./util";
@@ -22,6 +23,7 @@ export class Renderer {
     private ctx: CanvasRenderingContext2D;
     private assetManager: AssetManager;
     private faceConfigResolver: FaceConfigResolver;
+    private dynoFinder: DynoFinder;
 
     public static isRenderable = (dynObj: DynoInst) =>
         !_.isUndefined(dynObj.face);
@@ -32,6 +34,7 @@ export class Renderer {
         this.ctx = canvas.getContext("2d")!;
         this.assetManager = AssetManager.getInstance();
         this.faceConfigResolver = FaceConfigResolver.getInstance();
+        this.dynoFinder = DynoFinder.getInstance();
     }
 
     private clear() {
@@ -108,7 +111,7 @@ export class Renderer {
     }
 
     public render() {
-        const dynObjs = this.state.filterSceneObjects(Renderer.isRenderable);
+        const dynObjs = this.dynoFinder.filter(Renderer.isRenderable);
 
         this.clear();
 

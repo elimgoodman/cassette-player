@@ -1,4 +1,5 @@
 import { AssetManager } from "./asset-manager";
+import { DynoFinder } from "./dyno-finder";
 import { FaceConfigResolver } from "./face-config-resolver";
 import { DynoInst, GameState } from "./game-state";
 import { Renderer } from "./renderer";
@@ -15,6 +16,7 @@ export class CollisionDetector {
     private state: GameState;
     private faceConfigResolver: FaceConfigResolver;
     private assetManager: AssetManager;
+    private dynoFinder: DynoFinder;
 
     private static instance: CollisionDetector;
 
@@ -22,6 +24,7 @@ export class CollisionDetector {
         this.state = GameState.getInstance();
         this.faceConfigResolver = FaceConfigResolver.getInstance();
         this.assetManager = AssetManager.getInstance();
+        this.dynoFinder = DynoFinder.getInstance();
     }
 
     public static getInstance() {
@@ -33,7 +36,7 @@ export class CollisionDetector {
     }
 
     public getObjectsAtPoint(x: number, y: number): DynoInst[] {
-        const dynos = this.state.filterSceneObjects(Renderer.isRenderable);
+        const dynos = this.dynoFinder.filter(Renderer.isRenderable);
 
         // FIXME: I know this is super inefficient! Cache this!
         return dynos.filter(dyno => {
