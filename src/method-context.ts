@@ -7,7 +7,7 @@ import {
     SquareFaceArgs,
 } from "./cassette-def";
 import { EventDispatcher } from "./event-dispatcher";
-import { DynamicObjectInst, GameState } from "./game-state";
+import { DynoInst, GameState } from "./game-state";
 
 const unimplemented = () => {};
 
@@ -30,7 +30,7 @@ export class MethodContextMaker {
         this.state = GameState.getInstance();
     }
 
-    public make(dynObj: DynamicObjectInst): MethodContext {
+    public make(dynObj: DynoInst): MethodContext {
         const context: MethodContext = {
             actions: {
                 fireEvent: MethodContextMaker.fireEvent.bind(dynObj),

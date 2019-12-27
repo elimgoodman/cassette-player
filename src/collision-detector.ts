@@ -1,6 +1,6 @@
 import { AssetManager } from "./asset-manager";
 import { FaceConfigResolver } from "./face-config-resolver";
-import { DynamicObjectInst, GameState } from "./game-state";
+import { DynoInst, GameState } from "./game-state";
 import { Renderer } from "./renderer";
 import { getCommonVars } from "./util";
 
@@ -32,7 +32,7 @@ export class CollisionDetector {
         return CollisionDetector.instance;
     }
 
-    public getObjectsAtPoint(x: number, y: number): DynamicObjectInst[] {
+    public getObjectsAtPoint(x: number, y: number): DynoInst[] {
         const dynos = this.state.filterSceneObjects(Renderer.isRenderable);
 
         // FIXME: I know this is super inefficient! Cache this!
@@ -51,7 +51,7 @@ export class CollisionDetector {
         );
     }
 
-    private getBoundingRect(dyno: DynamicObjectInst): Rect | null {
+    private getBoundingRect(dyno: DynoInst): Rect | null {
         const face = this.faceConfigResolver.resolveFaceConfig(dyno);
         const { x, y } = getCommonVars(dyno);
 

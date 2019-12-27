@@ -34,7 +34,7 @@ export type Variables = { [key: string]: any };
 export type EventHandlers = { [eventName: string]: EventHandlerCallback };
 export type Helpers = { [name: string]: HelperCallback };
 
-export interface DynamicObjectInst {
+export interface DynoInst {
     id: string;
     uuid: string;
     variables: Variables;
@@ -44,9 +44,9 @@ export interface DynamicObjectInst {
 }
 
 class DynamicObjectManager {
-    private root: DynamicObjectInst;
-    private currentScene: DynamicObjectInst | null = null;
-    private sceneObjects: DynamicObjectInst[] = [];
+    private root: DynoInst;
+    private currentScene: DynoInst | null = null;
+    private sceneObjects: DynoInst[] = [];
 
     constructor(cassetteDef: CassetteDef) {
         this.root = cassetteDefToDynObj(cassetteDef);
@@ -61,11 +61,11 @@ class DynamicObjectManager {
 
     // FIXME: if this ends up being expensive (we'll prob be calling it a fair bit),
     // can easily precompute and store
-    public getSceneObjs(): DynamicObjectInst[] {
+    public getSceneObjs(): DynoInst[] {
         return [this.root, this.currentScene!].concat(this.sceneObjects);
     }
 
-    public getSceneDOI(): DynamicObjectInst {
+    public getSceneDOI(): DynoInst {
         return this.currentScene!;
     }
 }
@@ -94,17 +94,15 @@ export class GameState {
         this.loadScene(defaultSceneId);
     }
 
-    public filterSceneObjects(
-        pred: (obj: DynamicObjectInst) => boolean
-    ): DynamicObjectInst[] {
+    public filterSceneObjects(pred: (obj: DynoInst) => boolean): DynoInst[] {
         return this.dynObjManager.getSceneObjs().filter(pred);
     }
 
-    public allSceneObjects(): DynamicObjectInst[] {
+    public allSceneObjects(): DynoInst[] {
         return this.dynObjManager.getSceneObjs();
     }
 
-    public getCurrentSceneDOI(): DynamicObjectInst {
+    public getCurrentSceneDOI(): DynoInst {
         return this.dynObjManager.getSceneDOI();
     }
 

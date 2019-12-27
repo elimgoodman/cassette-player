@@ -13,7 +13,7 @@ export class CassetteLibrary {
 
     static getInstance(): CassetteLibrary {
         if (!CassetteLibrary.instance) {
-            throw "Not inited";
+            throw new Error("Not inited");
         }
 
         return CassetteLibrary.instance;

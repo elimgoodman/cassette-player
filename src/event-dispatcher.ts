@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { Event } from "./cassette-def";
-import { DynamicObjectInst, GameState } from "./game-state";
+import { DynoInst, GameState } from "./game-state";
 import { MethodContextMaker } from "./method-context";
 
 export class EventDispatcher {
@@ -35,13 +35,13 @@ export class EventDispatcher {
     }
 
     // TODO: this is cacheable if it becomes expensive
-    private getObjsThatHandle(event: Event): DynamicObjectInst[] {
+    private getObjsThatHandle(event: Event): DynoInst[] {
         return this.getTargets(event).filter(dynObj => {
             return _.has(dynObj.eventHandlers, event.eventName);
         });
     }
 
-    private getTargets(event: Event): DynamicObjectInst[] {
+    private getTargets(event: Event): DynoInst[] {
         if (_.isArray(event.target)) {
             return event.target;
         } else if (!_.isNil(event.target)) {

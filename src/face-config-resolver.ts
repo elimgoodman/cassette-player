@@ -1,5 +1,5 @@
 import { RenderableFaceConfig } from "./cassette-def";
-import { DynamicObjectInst } from "./game-state";
+import { DynoInst } from "./game-state";
 import { MethodContextMaker } from "./method-context";
 
 export class FaceConfigResolver {
@@ -16,9 +16,7 @@ export class FaceConfigResolver {
         return FaceConfigResolver.instance;
     }
 
-    public resolveFaceConfig(
-        dyno: DynamicObjectInst
-    ): RenderableFaceConfig | null {
+    public resolveFaceConfig(dyno: DynoInst): RenderableFaceConfig | null {
         const { face } = dyno;
         if (!face) {
             return null;

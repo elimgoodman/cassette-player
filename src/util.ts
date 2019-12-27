@@ -1,4 +1,4 @@
-import { CommonVariable, DynamicObjectInst } from "./game-state";
+import { CommonVariable, DynoInst } from "./game-state";
 import { MethodContextMaker } from "./method-context";
 
 export interface CommonVars {
@@ -7,7 +7,7 @@ export interface CommonVars {
     scale: number;
 }
 
-export function getCommonVars(dyno: DynamicObjectInst): CommonVars {
+export function getCommonVars(dyno: DynoInst): CommonVars {
     return {
         x: MethodContextMaker.getVariable({
             path: CommonVariable.X,

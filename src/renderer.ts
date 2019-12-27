@@ -6,7 +6,7 @@ import {
     SquareFaceConfig,
 } from "./cassette-def";
 import { FaceConfigResolver } from "./face-config-resolver";
-import { DynamicObjectInst, GameState } from "./game-state";
+import { DynoInst, GameState } from "./game-state";
 import { getCommonVars } from "./util";
 
 interface RenderDetails {
@@ -22,7 +22,7 @@ export class Renderer {
     private assetManager: AssetManager;
     private faceConfigResolver: FaceConfigResolver;
 
-    public static isRenderable = (dynObj: DynamicObjectInst) =>
+    public static isRenderable = (dynObj: DynoInst) =>
         !_.isUndefined(dynObj.face);
 
     constructor(canvas: HTMLCanvasElement) {
@@ -72,11 +72,11 @@ export class Renderer {
     }
 
     // TODO: this is prob unnecessary given the helper that's in util
-    private makeRenderDetails(dynObj: DynamicObjectInst): RenderDetails {
+    private makeRenderDetails(dynObj: DynoInst): RenderDetails {
         return getCommonVars(dynObj);
     }
 
-    private renderFace(dynObj: DynamicObjectInst) {
+    private renderFace(dynObj: DynoInst) {
         const details = this.makeRenderDetails(dynObj);
         const face = this.faceConfigResolver.resolveFaceConfig(dynObj)!;
 

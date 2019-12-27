@@ -1,6 +1,6 @@
-import { DynamicObjectInst, HelperCallback } from "./game-state";
+import { DynoInst, HelperCallback } from "./game-state";
 
-interface DynamicObjectDef {
+interface DynoDef {
     variables?: Variable[];
     events?: EventHandler[];
     helpers?: Helper[];
@@ -62,12 +62,12 @@ export type GameObject = {
     id: string;
     face: FaceConfig;
     assets?: AssetDef[];
-} & DynamicObjectDef;
+} & DynoDef;
 
 export type Scene = {
     id: string;
     gameObjects: GameObject[];
-} & DynamicObjectDef;
+} & DynoDef;
 
 export interface Variable {
     name: string;
@@ -91,23 +91,23 @@ export type CassetteDef = {
     controllers: Controller[];
     scenes: Scene[];
     defaultSceneId: string;
-} & DynamicObjectDef;
+} & DynoDef;
 
 export interface AssetDef {
     id: string;
     path: string;
 }
 
-type Target = DynamicObjectInst | DynamicObjectInst[];
+type Target = DynoInst | DynoInst[];
 
 export interface GetVariableArgs {
-    object: DynamicObjectInst;
+    object: DynoInst;
     path: string;
     badge?: string;
 }
 
 export interface SetVariableArgs {
-    object: DynamicObjectInst;
+    object: DynoInst;
     path: string;
     value: any;
     badge?: string;
@@ -118,7 +118,7 @@ interface Actions {
     fireEvent: (event: Event) => any;
     setVariable: (args: SetVariableArgs) => void;
     updateVariable: (args: {
-        object: DynamicObjectInst;
+        object: DynoInst;
         path: string;
         updater: (val: any) => any;
         badge?: string;
@@ -138,8 +138,8 @@ interface FaceHelpers {
 
 export interface MethodContext {
     actions: Actions;
-    self: DynamicObjectInst;
+    self: DynoInst;
     helpers: any;
     faces: FaceHelpers;
-    currentScene: DynamicObjectInst;
+    currentScene: DynoInst;
 }
