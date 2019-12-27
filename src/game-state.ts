@@ -34,7 +34,7 @@ export type Variables = { [key: string]: any };
 export type EventHandlers = { [eventName: string]: EventHandlerCallback };
 export type Helpers = { [name: string]: HelperCallback };
 
-export interface DynamicObjectInst {
+export interface DynoInst {
     id: string;
     uuid: string;
     variables: Variables;
@@ -43,10 +43,10 @@ export interface DynamicObjectInst {
     face?: FaceConfig;
 }
 
-class DynamicObjectManager {
-    private root: DynamicObjectInst;
-    private currentScene: DynamicObjectInst | null = null;
-    private sceneObjects: DynamicObjectInst[] = [];
+class DynoManager {
+    private root: DynoInst;
+    private currentScene: DynoInst | null = null;
+    private sceneObjects: DynoInst[] = [];
 
     constructor(cassetteDef: CassetteDef) {
         this.root = cassetteDefToDynObj(cassetteDef);
@@ -61,18 +61,18 @@ class DynamicObjectManager {
 
     // FIXME: if this ends up being expensive (we'll prob be calling it a fair bit),
     // can easily precompute and store
-    public getSceneObjs(): DynamicObjectInst[] {
+    public getSceneObjs(): DynoInst[] {
         return [this.root, this.currentScene!].concat(this.sceneObjects);
     }
 
-    public getSceneDOI(): DynamicObjectInst {
+    public getSceneDyno(): DynoInst {
         return this.currentScene!;
     }
 }
 
 export class GameState {
     private sceneManager: SceneManager;
-    private dynObjManager: DynamicObjectManager;
+    private dynoManager: DynoManager;
 
     private static instance: GameState;
 
@@ -89,29 +89,27 @@ export class GameState {
         const { scenes: sceneDefs, defaultSceneId } = cassetteDef;
 
         this.sceneManager = new SceneManager(sceneDefs);
-        this.dynObjManager = new DynamicObjectManager(cassetteDef);
+        this.dynoManager = new DynoManager(cassetteDef);
 
         this.loadScene(defaultSceneId);
     }
 
-    public filterSceneObjects(
-        pred: (obj: DynamicObjectInst) => boolean
-    ): DynamicObjectInst[] {
-        return this.dynObjManager.getSceneObjs().filter(pred);
+    public filterSceneObjects(pred: (obj: DynoInst) => boolean): DynoInst[] {
+        return this.dynoManager.getSceneObjs().filter(pred);
     }
 
-    public allSceneObjects(): DynamicObjectInst[] {
-        return this.dynObjManager.getSceneObjs();
+    public allSceneObjects(): DynoInst[] {
+        return this.dynoManager.getSceneObjs();
     }
 
-    public getCurrentSceneDOI(): DynamicObjectInst {
-        return this.dynObjManager.getSceneDOI();
+    public getCurrentSceneDOI(): DynoInst {
+        return this.dynoManager.getSceneDyno();
     }
 
     private loadScene(sceneId: string): void {
         const scene = this.sceneManager.getSceneById(sceneId);
         if (scene) {
-            this.dynObjManager.addAllForScene(scene);
+            this.dynoManager.addAllForScene(scene);
             this.sceneManager.currentScene = scene;
         }
     }

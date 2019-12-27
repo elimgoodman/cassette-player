@@ -3,7 +3,6 @@
 import "./index.css";
 import { ticTacToe } from "./sample-cassette";
 import { Renderer } from "./renderer";
-import { GameState } from "./game-state";
 import { EventDispatcher } from "./event-dispatcher";
 import { AssetManager } from "./asset-manager";
 import { CassetteLibrary } from "./cassette-library";
