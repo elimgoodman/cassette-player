@@ -1,6 +1,7 @@
 import _ from "lodash";
 import { AssetManager } from "./asset-manager";
 import {
+    CircleFaceConfig,
     ImageFaceConfig,
     LineFaceConfig,
     RectFaceConfig,
@@ -91,6 +92,15 @@ export class Renderer {
         this.ctx.fillText(text, x, y);
     }
 
+    private renderCircle(face: CircleFaceConfig, details: RenderDetails) {
+        const { radius, color } = face;
+        const { x, y } = details;
+
+        this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        this.ctx.fillStyle = color;
+        this.ctx.fill();
+    }
+
     // TODO: this is prob unnecessary given the helper that's in util
     private makeRenderDetails(dynObj: DynoInst): RenderDetails {
         return getCommonVars(dynObj);
@@ -112,6 +122,9 @@ export class Renderer {
                 break;
             case "rect":
                 this.renderRect(face, details);
+                break;
+            case "circle":
+                this.renderCircle(face, details);
                 break;
             case "text":
                 this.renderText(face, details);

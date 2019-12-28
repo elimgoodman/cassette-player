@@ -1,6 +1,6 @@
 import _ from "lodash";
 import {
-    Badge,
+    BadgeDef,
     CassetteDef,
     EventHandler as EventHandlerDef,
     GameObject,
@@ -25,7 +25,10 @@ export function cassetteDefToDynObj(cassetteDef: CassetteDef): DynoInst {
     return {
         id: ROOT_ID,
         uuid: uuidv4(),
-        variables: transformVariables(cassetteDef.variables),
+        variables: transformVariables(
+            cassetteDef.variables,
+            cassetteDef.badges
+        ),
         eventHandlers: transformEventHandlers(cassetteDef.events),
         helpers: transformHelpers(cassetteDef.helpers),
         badges: transformBadges(cassetteDef.badges),
@@ -46,7 +49,7 @@ function sceneDefToDynObj(sceneDef: SceneDef): DynoInst {
     return {
         id: sceneDef.id,
         uuid: uuidv4(),
-        variables: transformVariables(sceneDef.variables),
+        variables: transformVariables(sceneDef.variables, sceneDef.badges),
         eventHandlers: transformEventHandlers(sceneDef.events),
         helpers: transformHelpers(sceneDef.helpers),
         badges: transformBadges(sceneDef.badges),
@@ -66,7 +69,7 @@ function sceneObjsToDynObjs(gameObjects: GameObject[]): DynoInst[] {
         const variables = _.merge(
             {},
             getCommonSceneObjVariables(gameObject),
-            transformVariables(gameObject.variables)
+            transformVariables(gameObject.variables, gameObject.badges)
         );
 
         return {
@@ -81,14 +84,20 @@ function sceneObjsToDynObjs(gameObjects: GameObject[]): DynoInst[] {
     });
 }
 
-function transformVariables(variables?: Variable[]): Variables {
+function transformVariables(
+    variables?: Variable[],
+    badges?: BadgeDef[]
+): Variables {
     const transformed: Variables = {};
+    const setVariable = (variable: Variable) => {
+        transformed[variable.name] = variable.value;
+    };
 
-    if (variables) {
-        variables.forEach(variable => {
-            transformed[variable.name] = variable.value;
-        });
-    }
+    badges?.forEach(badge => {
+        badge.variables?.forEach(setVariable);
+    });
+
+    variables?.forEach(setVariable);
 
     return transformed;
 }
@@ -117,14 +126,13 @@ function transformHelpers(helpers?: Helper[]): Helpers {
     return transformed;
 }
 
-function transformBadges(badges?: Badge[]): Badges {
+function transformBadges(badges?: BadgeDef[]): Badges {
     const transformed: Badges = {};
 
     if (badges) {
         badges.forEach(badge => {
             transformed[badge.id] = {
                 eventHandlers: transformEventHandlers(badge.events),
-                helpers: transformHelpers(badge.helpers),
                 variables: transformVariables(badge.variables),
             };
         });

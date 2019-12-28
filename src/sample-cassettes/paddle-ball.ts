@@ -1,29 +1,40 @@
-import { Badge, CassetteDef } from "../cassette-def";
+import { BadgeDef, CassetteDef } from "../cassette-def";
 
-const kbControlBadge: Badge = {
+const kbControlBadge: BadgeDef = {
     id: "kb-control",
     events: [
         {
             event: "keydown",
             handler: ($event, $ctx) => {
+                const moveSpeed = $ctx.actions.getVariable({
+                    object: $ctx.self,
+                    path: "moveSpeed",
+                });
+
                 const { key } = $event.payload;
                 switch (key) {
                     case "ArrowLeft":
                         $ctx.actions.updateVariable({
                             object: $ctx.self,
                             path: "x",
-                            updater: x => x - 1,
+                            updater: x => x - moveSpeed,
                         });
                         break;
                     case "ArrowRight":
                         $ctx.actions.updateVariable({
                             object: $ctx.self,
                             path: "x",
-                            updater: x => x + 1,
+                            updater: x => x + moveSpeed,
                         });
                         break;
                 }
             },
+        },
+    ],
+    variables: [
+        {
+            name: "moveSpeed",
+            value: 3,
         },
     ],
 };
@@ -77,8 +88,30 @@ export const paddleBall: CassetteDef = {
                             name: "y",
                             value: 80,
                         },
+                        {
+                            name: "moveSpeed",
+                            value: 5,
+                        },
                     ],
                     badges: [kbControlBadge],
+                },
+                {
+                    id: "ball",
+                    face: {
+                        type: "circle",
+                        radius: 10,
+                        color: "#aaffaa",
+                    },
+                    variables: [
+                        {
+                            name: "x",
+                            value: 10,
+                        },
+                        {
+                            name: "y",
+                            value: 10,
+                        },
+                    ],
                 },
             ],
         },

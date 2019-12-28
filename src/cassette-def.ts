@@ -5,7 +5,7 @@ interface DynoDef {
     variables?: Variable[];
     events?: EventHandler[];
     helpers?: Helper[];
-    badges?: Badge[];
+    badges?: BadgeDef[];
 }
 
 export interface Helper {
@@ -50,6 +50,12 @@ export interface SquareFaceConfig {
     color: Color;
 }
 
+export interface CircleFaceConfig {
+    type: "circle";
+    radius: number;
+    color: Color;
+}
+
 export interface RectFaceConfig {
     type: "rect";
     width: number;
@@ -69,6 +75,7 @@ export type RenderableFaceConfig =
     | ImageFaceConfig
     | TextFaceConfig
     | RectFaceConfig
+    | CircleFaceConfig
     | SquareFaceConfig;
 
 export type FaceConfig =
@@ -121,14 +128,12 @@ type Target = DynoInst | DynoInst[];
 export interface GetVariableArgs {
     object: DynoInst;
     path: string;
-    badge?: string;
 }
 
 export interface SetVariableArgs {
     object: DynoInst;
     path: string;
     value: any;
-    badge?: string;
 }
 
 export interface GoToSceneArgs {
@@ -144,7 +149,6 @@ interface Actions {
         object: DynoInst;
         path: string;
         updater: (val: any) => any;
-        badge?: string;
     }) => void;
     goToScene: (args: GoToSceneArgs) => void;
 }
@@ -168,10 +172,8 @@ export interface MethodContext {
     dynos: DynoFinder;
 }
 
-// FIXME: this is the exact same as DynoDef...
-export interface Badge {
+export interface BadgeDef {
     id: string;
     variables?: Variable[];
     events?: EventHandler[];
-    helpers?: Helper[];
 }
