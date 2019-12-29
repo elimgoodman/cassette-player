@@ -142,14 +142,14 @@ export interface GoToSceneArgs {
 }
 
 interface Actions {
-    getVariable: (args: GetVariableArgs) => any;
+    // getVariable: (args: GetVariableArgs) => any;
     fireEvent: (event: Event) => any;
-    setVariable: (args: SetVariableArgs) => void;
-    updateVariable: (args: {
-        object: DynoInst;
-        path: string;
-        updater: (val: any) => any;
-    }) => void;
+    // setVariable: (args: SetVariableArgs) => void;
+    // updateVariable: (args: {
+    //     object: DynoInst;
+    //     path: string;
+    //     updater: (val: any) => any;
+    // }) => void;
     goToScene: (args: GoToSceneArgs) => void;
 }
 
@@ -165,7 +165,7 @@ interface FaceHelpers {
 
 export interface MethodContext {
     actions: Actions;
-    self: DynoInst;
+    self: any;
     helpers: any;
     faces: FaceHelpers;
     currentScene: DynoInst;

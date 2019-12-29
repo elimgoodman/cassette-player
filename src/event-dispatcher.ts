@@ -5,9 +5,10 @@ import { DynoInst, EventHandlers } from "./game-state";
 import { MethodContextMaker } from "./method-context";
 
 export class EventDispatcher {
-    static TICK_EVENT: Event = {
+    static TICK_EVENT: (elapsed: number) => Event = elapsed => ({
         eventName: "tick",
-    };
+        payload: { elapsed },
+    });
 
     private dynoManager: DynoManager;
     private methodContextMaker: MethodContextMaker;

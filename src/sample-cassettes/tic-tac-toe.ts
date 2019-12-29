@@ -28,41 +28,37 @@ const gameTile: GameObject = {
         {
             event: "click",
             handler: ($event, $ctx) => {
-                const {
-                    actions: { getVariable, fireEvent },
-                    currentScene,
-                    helpers,
-                    self,
-                } = $ctx;
-
-                const playerTurn = getVariable({
-                    object: currentScene,
-                    path: "playerTurn",
-                });
-
-                // FIXME: add this back in later
-                // if ($event.metadata.controllerId !== playerTurn) {
-                //     return;
-                // }
-
-                const boardState = helpers.getBoardState();
-                if (boardState !== undefined) return;
-
-                fireEvent({
-                    target: currentScene,
-                    eventName: "move-made",
-                    payload: {
-                        x: getVariable({
-                            object: self,
-                            path: "boardX",
-                        }),
-                        y: getVariable({
-                            object: self,
-                            path: "boardY",
-                        }),
-                        mark: playerTurn === "player1" ? "X" : "O",
-                    },
-                });
+                // const {
+                //     actions: { getVariable, fireEvent },
+                //     currentScene,
+                //     helpers,
+                //     self,
+                // } = $ctx;
+                // const playerTurn = getVariable({
+                //     object: currentScene,
+                //     path: "playerTurn",
+                // });
+                // // FIXME: add this back in later
+                // // if ($event.metadata.controllerId !== playerTurn) {
+                // //     return;
+                // // }
+                // const boardState = helpers.getBoardState();
+                // if (boardState !== undefined) return;
+                // fireEvent({
+                //     target: currentScene,
+                //     eventName: "move-made",
+                //     payload: {
+                //         x: getVariable({
+                //             object: self,
+                //             path: "boardX",
+                //         }),
+                //         y: getVariable({
+                //             object: self,
+                //             path: "boardY",
+                //         }),
+                //         mark: playerTurn === "player1" ? "X" : "O",
+                //     },
+                // });
             },
         },
     ],
@@ -84,27 +80,23 @@ const gameTile: GameObject = {
         {
             id: "getBoardState",
             handler: ($ctx: MethodContext) => {
-                const {
-                    actions: { getVariable },
-                    currentScene,
-                } = $ctx;
-
-                const boardX = getVariable({
-                    object: $ctx.self,
-                    path: "boardX",
-                });
-
-                const boardY = getVariable({
-                    object: $ctx.self,
-                    path: "boardY",
-                });
-
-                const boardState = getVariable({
-                    object: currentScene,
-                    path: "boardState",
-                });
-
-                return boardState[boardX][boardY];
+                // const {
+                //     actions: { getVariable },
+                //     currentScene,
+                // } = $ctx;
+                // const boardX = getVariable({
+                //     object: $ctx.self,
+                //     path: "boardX",
+                // });
+                // const boardY = getVariable({
+                //     object: $ctx.self,
+                //     path: "boardY",
+                // });
+                // const boardState = getVariable({
+                //     object: currentScene,
+                //     path: "boardState",
+                // });
+                // return boardState[boardX][boardY];
             },
         },
     ],
@@ -139,11 +131,11 @@ const boardScene: SceneDef = {
                 {
                     event: "tick",
                     handler: (_event, $ctx) => {
-                        $ctx.actions.updateVariable({
-                            object: $ctx.self,
-                            path: "x",
-                            updater: x => x + 1,
-                        });
+                        // $ctx.actions.updateVariable({
+                        //     object: $ctx.self,
+                        //     path: "x",
+                        //     updater: x => x + 1,
+                        // });
                     },
                 },
             ],
@@ -157,10 +149,7 @@ const boardScene: SceneDef = {
                 fontSize: 30,
                 generator: $ctx => {
                     const line = $ctx.dynos.getById("vertical-line")!;
-                    return $ctx.actions.getVariable({
-                        object: line,
-                        path: "x",
-                    });
+                    return "foo";
                 },
             },
             variables: [
@@ -180,17 +169,17 @@ const boardScene: SceneDef = {
             event: "move-made",
             handler: ($event, $ctx) => {
                 const { x, y, mark } = $event.payload;
-                const boardState = $ctx.actions.getVariable({
-                    object: $ctx.self,
-                    path: "boardState",
-                });
+                // const boardState = $ctx.actions.getVariable({
+                //     object: $ctx.self,
+                //     path: "boardState",
+                // });
 
-                boardState[x][y] = mark;
-                $ctx.actions.setVariable({
-                    object: $ctx.self,
-                    path: "boardState",
-                    value: boardState,
-                });
+                // boardState[x][y] = mark;
+                // $ctx.actions.setVariable({
+                //     object: $ctx.self,
+                //     path: "boardState",
+                //     value: boardState,
+                // });
 
                 const winner = $ctx.helpers.checkWinner(); // TODO: implement checkWinner
                 if (winner) {
@@ -228,12 +217,13 @@ export const ticTacToe: CassetteDef = {
                     face: {
                         type: "dynamic-text",
                         generator: $ctx => {
-                            const winner = $ctx.actions.getVariable({
-                                object: $ctx.currentScene,
-                                path: "winner",
-                            });
+                            // const winner = $ctx.actions.getVariable({
+                            //     object: $ctx.currentScene,
+                            //     path: "winner",
+                            // });
 
-                            return `${winner} is the winner!`;
+                            // return `${winner} is the winner!`;
+                            return "fixme";
                         },
                         fontSize: 18,
                         color: "#333333",

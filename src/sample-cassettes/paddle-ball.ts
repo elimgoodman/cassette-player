@@ -1,31 +1,58 @@
 import { BadgeDef, CassetteDef } from "../cassette-def";
 
+const physicalBadge: BadgeDef = {
+    id: "physical",
+    events: [
+        {
+            event: "tick",
+            handler: ($event, $ctx) => {
+                const { elapsed } = $event.payload;
+                const { self } = $ctx;
+                const gx = 0 * elapsed;
+                const gy = 0;
+
+                self.vx += self.ax * elapsed + gx;
+                self.vy += self.ay * elapsed + gy;
+                self.x += self.vx * elapsed;
+                self.y += self.vy * elapsed;
+            },
+        },
+    ],
+    variables: [
+        {
+            name: "vx",
+            value: 0.2,
+        },
+        {
+            name: "vy",
+            value: 0,
+        },
+        {
+            name: "ax",
+            value: 0,
+        },
+        {
+            name: "ay",
+            value: 0,
+        },
+    ],
+};
+
 const kbControlBadge: BadgeDef = {
     id: "kb-control",
     events: [
         {
             event: "keydown",
             handler: ($event, $ctx) => {
-                const moveSpeed = $ctx.actions.getVariable({
-                    object: $ctx.self,
-                    path: "moveSpeed",
-                });
+                const { moveSpeed } = $ctx.self;
 
                 const { key } = $event.payload;
                 switch (key) {
                     case "ArrowLeft":
-                        $ctx.actions.updateVariable({
-                            object: $ctx.self,
-                            path: "x",
-                            updater: x => x - moveSpeed,
-                        });
+                        $ctx.self.x += moveSpeed;
                         break;
                     case "ArrowRight":
-                        $ctx.actions.updateVariable({
-                            object: $ctx.self,
-                            path: "x",
-                            updater: x => x + moveSpeed,
-                        });
+                        $ctx.self.x -= moveSpeed;
                         break;
                 }
             },
@@ -105,13 +132,14 @@ export const paddleBall: CassetteDef = {
                     variables: [
                         {
                             name: "x",
-                            value: 10,
+                            value: 100,
                         },
                         {
                             name: "y",
-                            value: 10,
+                            value: 100,
                         },
                     ],
+                    badges: [physicalBadge],
                 },
             ],
         },

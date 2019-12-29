@@ -37,26 +37,43 @@ export class MethodContextMaker {
     }
 
     public make(dynObj: DynoInst): MethodContext {
+        const dynoProxy = new Proxy(dynObj, {
+            get: (obj, prop) => {
+                return MethodContextMaker.getVariable({
+                    object: obj,
+                    path: prop as string,
+                });
+            },
+            set: (obj, prop, value) => {
+                MethodContextMaker.setVariable({
+                    object: obj,
+                    path: prop as string,
+                    value,
+                });
+                return true;
+            },
+        });
+
         const context: MethodContext = {
             actions: {
                 fireEvent: MethodContextMaker.fireEvent.bind(dynObj),
-                getVariable: MethodContextMaker.getVariable.bind(dynObj),
+                // getVariable: MethodContextMaker.getVariable.bind(dynObj),
                 goToScene: args => this.goToScene(args),
-                setVariable: MethodContextMaker.setVariable.bind(dynObj),
-                updateVariable: args => {
-                    const { object, path, updater } = args;
+                // setVariable: MethodContextMaker.setVariable.bind(dynObj),
+                // updateVariable: args => {
+                //     const { object, path, updater } = args;
 
-                    const old = MethodContextMaker.getVariable({
-                        object,
-                        path,
-                    });
+                //     const old = MethodContextMaker.getVariable({
+                //         object,
+                //         path,
+                //     });
 
-                    MethodContextMaker.setVariable({
-                        object,
-                        path,
-                        value: updater(old),
-                    });
-                },
+                //     MethodContextMaker.setVariable({
+                //         object,
+                //         path,
+                //         value: updater(old),
+                //     });
+                // },
             },
             currentScene: this.dynoManager.getSceneDyno(),
             helpers: _.mapValues(dynObj.helpers, callback => {
@@ -64,7 +81,7 @@ export class MethodContextMaker {
                     return callback(context);
                 };
             }),
-            self: dynObj,
+            self: dynoProxy,
             faces: {
                 image: ({ assetId }) => ({
                     type: "image",

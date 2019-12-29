@@ -38,8 +38,11 @@ window.addEventListener("keydown", event => {
     await AssetManager.getInstance().loadAll();
 })();
 
-const gameLoop = () => {
-    dispatcher.dispatch(EventDispatcher.TICK_EVENT);
+let start: number | null = null;
+const gameLoop = (timestamp: number) => {
+    if (!start) start = timestamp;
+    const elapsed = timestamp - start;
+    dispatcher.dispatch(EventDispatcher.TICK_EVENT(elapsed));
     renderer.render();
     requestAnimationFrame(gameLoop);
 };
