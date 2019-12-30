@@ -16,6 +16,7 @@ import {
     Helpers,
     Variables,
 } from "./game-state";
+import { SceneBuilder } from "./scene-builder";
 
 const uuidv4 = require("uuid/v4");
 
@@ -40,8 +41,16 @@ export function sceneDefToDynObjs(
 ): { sceneDynObj: DynoInst; sceneObjs: DynoInst[] } {
     return {
         sceneDynObj: sceneDefToDynObj(sceneDef),
-        sceneObjs: sceneObjsToDynObjs(sceneDef.gameObjects),
+        sceneObjs: sceneObjsToDynObjs(getGameObjsForScene(sceneDef)),
     };
+}
+
+export function getGameObjsForScene(sceneDef: SceneDef): GameObject[] {
+    if (sceneDef.type === "static") {
+        return sceneDef.gameObjects;
+    }
+
+    return sceneDef.loader(SceneBuilder.getInstance());
 }
 
 // FIXME: dedupe w cassetteDef one - they're identical

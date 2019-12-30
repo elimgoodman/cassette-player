@@ -50,6 +50,7 @@ export const paddleBall: CassetteDef = {
     scenes: [
         {
             id: "default-scene",
+            type: "static",
             gameObjects: [
                 {
                     id: "paddle",

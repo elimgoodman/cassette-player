@@ -109,13 +109,14 @@ const gameTile: GameObject = {
         },
     ],
     assets: [
-        { id: "x-image", path: "x-image.png" },
-        { id: "o-image", path: "o-image.png" },
+        { id: "x-image", type: "image", path: "x-image.png" },
+        { id: "o-image", type: "image", path: "o-image.png" },
     ],
 };
 
 const boardScene: SceneDef = {
     id: "game-board",
+    type: "static",
     variables: [
         {
             name: "boardState",
@@ -222,6 +223,7 @@ export const ticTacToe: CassetteDef = {
         boardScene,
         {
             id: "winner-screen",
+            type: "static",
             gameObjects: [
                 {
                     id: "winner-text",
