@@ -1,5 +1,6 @@
 import { DynoFinder } from "./dyno-finder";
 import { DynoInst, HelperCallback } from "./game-state";
+import { SceneBuilder } from "./scene-builder";
 
 interface DynoDef {
     variables?: Variable[];
@@ -89,9 +90,20 @@ export type GameObject = {
     assets?: AssetDef[];
 } & DynoDef;
 
-export type SceneDef = {
-    id: string;
+type SceneLoader = ($builder: SceneBuilder) => GameObject[];
+
+type StaticSceneDef = {
+    type: "static";
     gameObjects: GameObject[];
+};
+
+type DynamicSceneDef = {
+    type: "dynamic";
+    loader: SceneLoader;
+};
+
+export type SceneDef = (StaticSceneDef | DynamicSceneDef) & {
+    id: string;
 } & DynoDef;
 
 export interface Variable {
@@ -116,12 +128,17 @@ export type CassetteDef = {
     controllers: Controller[];
     scenes: SceneDef[];
     defaultSceneId: string;
+    prefabs?: GameObject[];
 } & DynoDef;
 
-export interface AssetDef {
-    id: string;
+type ImageAssetDef = {
+    type: "image";
     path: string;
-}
+};
+
+export type AssetDef = ImageAssetDef & {
+    id: string;
+};
 
 type Target = DynoInst | DynoInst[];
 

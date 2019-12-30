@@ -1,5 +1,6 @@
-import { CassetteDef, AssetDef } from "./cassette-def";
+import { AssetDef, CassetteDef } from "./cassette-def";
 import { CassetteLibrary } from "./cassette-library";
+import { getGameObjsForScene } from "./cassette-loading";
 
 type LoadedAsset = HTMLImageElement;
 
@@ -38,11 +39,13 @@ export class AssetManager {
 
             // FIXME: generalize for more asset types
             assetDefs.forEach(assetDef => {
-                const img = new Image();
-                img.src = assetDef.path;
-                img.onload = onLoaded;
+                if (assetDef.type === "image") {
+                    const img = new Image();
+                    img.src = assetDef.path;
+                    img.onload = onLoaded;
 
-                this.loadedAssets[assetDef.id] = img;
+                    this.loadedAssets[assetDef.id] = img;
+                }
             });
         });
     }
@@ -50,7 +53,7 @@ export class AssetManager {
     private collectAssetDefs(): AssetDef[] {
         let assetDefs: AssetDef[] = [];
         this.cassetteDef.scenes.forEach(scene => {
-            scene.gameObjects.forEach(gameObj => {
+            getGameObjsForScene(scene).forEach(gameObj => {
                 if (gameObj.assets) {
                     assetDefs = assetDefs.concat(gameObj.assets);
                 }

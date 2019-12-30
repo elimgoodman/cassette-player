@@ -8,9 +8,10 @@ import { AssetManager } from "./asset-manager";
 import { CassetteLibrary } from "./cassette-library";
 import { CollisionDetector } from "./collision-detector";
 import { paddleBall } from "./sample-cassettes/paddle-ball";
+import { dynamicScene } from "./sample-cassettes/dynamic-scene";
 
 // ReactDOM.render(<App />, document.getElementById("root"));
-CassetteLibrary.init([paddleBall, ticTacToe]);
+CassetteLibrary.init([dynamicScene, paddleBall, ticTacToe]);
 
 const canvas = document.getElementById("cassette-canvas")! as HTMLCanvasElement;
 const dispatcher = EventDispatcher.getInstance();
