@@ -10,7 +10,7 @@ export class EventDispatcher {
     };
 
     private dynoManager: DynoManager;
-    private methodContextMaker: MethodContextMaker;
+    // private methodContextMaker: MethodContextMaker;
 
     private static instance: EventDispatcher;
 
@@ -23,7 +23,7 @@ export class EventDispatcher {
     }
 
     private constructor() {
-        this.methodContextMaker = MethodContextMaker.getInstance();
+        // this.methodContextMaker = MethodContextMaker.getInstance();
         this.dynoManager = DynoManager.getInstance();
     }
 
@@ -31,12 +31,14 @@ export class EventDispatcher {
         const objs = this.getObjsThatHandle(event);
         objs.forEach(obj => {
             const handler = this.gatherHandlers(obj)[event.eventName]!;
-            handler(event, this.methodContextMaker.make(obj));
+            handler(event, MethodContextMaker.getInstance().make(obj));
         });
     }
 
     // TODO: this is cacheable if it becomes expensive
     private getObjsThatHandle(event: Event): DynoInst[] {
+        // console.log(event);
+        // console.log(this.getTargets(event));
         return this.getTargets(event).filter(dyno => {
             const handlers = this.gatherHandlers(dyno);
             return _.has(handlers, event.eventName);

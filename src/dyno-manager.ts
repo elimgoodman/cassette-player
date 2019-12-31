@@ -24,7 +24,6 @@ export class DynoManager {
 
     public addAllForScene(sceneDef: SceneDef): void {
         const { sceneDynObj, sceneObjs } = sceneDefToDynObjs(sceneDef);
-
         this.currentScene = sceneDynObj;
         this.sceneObjects = sceneObjs;
     }
@@ -37,5 +36,9 @@ export class DynoManager {
 
     public getSceneDyno(): DynoInst {
         return this.currentScene!;
+    }
+
+    public add(dyno: DynoInst): void {
+        this.sceneObjects.push(dyno);
     }
 }

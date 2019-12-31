@@ -1,6 +1,6 @@
 import { DynoFinder } from "./dyno-finder";
 import { DynoInst, HelperCallback } from "./game-state";
-import { SceneBuilder } from "./scene-builder";
+import { PrefabManager } from "./prefab-manager";
 
 interface DynoDef {
     variables?: Variable[];
@@ -90,20 +90,9 @@ export type GameObject = {
     assets?: AssetDef[];
 } & DynoDef;
 
-type SceneLoader = ($builder: SceneBuilder) => GameObject[];
-
-type StaticSceneDef = {
-    type: "static";
-    gameObjects: GameObject[];
-};
-
-type DynamicSceneDef = {
-    type: "dynamic";
-    loader: SceneLoader;
-};
-
-export type SceneDef = (StaticSceneDef | DynamicSceneDef) & {
+export type SceneDef = {
     id: string;
+    gameObjects?: GameObject[];
 } & DynoDef;
 
 export interface Variable {
@@ -158,6 +147,12 @@ export interface GoToSceneArgs {
     variables?: any;
 }
 
+export interface SpawnArgs {
+    gameObject: GameObject;
+    id?: string;
+    variables?: any;
+}
+
 interface Actions {
     getVariable: (args: GetVariableArgs) => any;
     fireEvent: (event: Event) => any;
@@ -168,6 +163,7 @@ interface Actions {
         updater: (val: any) => any;
     }) => void;
     goToScene: (args: GoToSceneArgs) => void;
+    spawn: (args: SpawnArgs) => DynoInst;
 }
 
 export interface SquareFaceArgs {
@@ -187,6 +183,7 @@ export interface MethodContext {
     faces: FaceHelpers;
     currentScene: DynoInst;
     dynos: DynoFinder;
+    prefabs: PrefabManager;
 }
 
 export interface BadgeDef {

@@ -1,4 +1,4 @@
-import { CassetteDef, GameObject } from "../cassette-def";
+import { CassetteDef } from "../cassette-def";
 
 export const dynamicScene: CassetteDef = {
     defaultSceneId: "default-scene",
@@ -6,26 +6,21 @@ export const dynamicScene: CassetteDef = {
     scenes: [
         {
             id: "default-scene",
-            type: "dynamic",
-            loader: $builder => {
-                const objs: GameObject[] = [];
-                for (let i = 0; i < 3; i++) {
-                    for (let j = 0; j < 3; j++) {
-                        objs.push(
-                            $builder.fromPrefab({
-                                prefabId: "block",
-                                id: `block-${i}-${j}`,
-                                variables: {
-                                    x: i * 22,
-                                    y: j * 22,
-                                    color: i === 2 ? "#ee00ee" : "#00ee0",
-                                },
-                            })
-                        );
-                    }
-                }
-                return objs;
-            },
+            events: [
+                {
+                    event: "load",
+                    handler: ($event, $ctx) => {
+                        const prefab = $ctx.prefabs.getById("block")!;
+                        $ctx.actions.spawn({
+                            gameObject: prefab,
+                            variables: {
+                                x: 10,
+                                y: 10,
+                            },
+                        });
+                    },
+                },
+            ],
         },
     ],
     prefabs: [

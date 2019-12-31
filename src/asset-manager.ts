@@ -1,6 +1,5 @@
 import { AssetDef, CassetteDef } from "./cassette-def";
 import { CassetteLibrary } from "./cassette-library";
-import { getGameObjsForScene } from "./cassette-loading";
 
 type LoadedAsset = HTMLImageElement;
 
@@ -53,7 +52,7 @@ export class AssetManager {
     private collectAssetDefs(): AssetDef[] {
         let assetDefs: AssetDef[] = [];
         this.cassetteDef.scenes.forEach(scene => {
-            getGameObjsForScene(scene).forEach(gameObj => {
+            scene.gameObjects?.forEach(gameObj => {
                 if (gameObj.assets) {
                     assetDefs = assetDefs.concat(gameObj.assets);
                 }

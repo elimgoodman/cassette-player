@@ -9,10 +9,14 @@ import { CassetteLibrary } from "./cassette-library";
 import { CollisionDetector } from "./collision-detector";
 import { paddleBall } from "./sample-cassettes/paddle-ball";
 import { dynamicScene } from "./sample-cassettes/dynamic-scene";
+import { SceneManager } from "./scene-manager";
 
 // ReactDOM.render(<App />, document.getElementById("root"));
 CassetteLibrary.init([dynamicScene, paddleBall, ticTacToe]);
 
+// FIXME: HUGE HACK!!!!!! this is done just to get the scene into a loaded state/
+// FIXME: find a long term solution!
+const _throw = SceneManager.getInstance();
 const canvas = document.getElementById("cassette-canvas")! as HTMLCanvasElement;
 const dispatcher = EventDispatcher.getInstance();
 const collisionDetector = CollisionDetector.getInstance();

@@ -16,7 +16,6 @@ import {
     Helpers,
     Variables,
 } from "./game-state";
-import { SceneBuilder } from "./scene-builder";
 
 const uuidv4 = require("uuid/v4");
 
@@ -41,16 +40,8 @@ export function sceneDefToDynObjs(
 ): { sceneDynObj: DynoInst; sceneObjs: DynoInst[] } {
     return {
         sceneDynObj: sceneDefToDynObj(sceneDef),
-        sceneObjs: sceneObjsToDynObjs(getGameObjsForScene(sceneDef)),
+        sceneObjs: sceneObjsToDynObjs(sceneDef.gameObjects),
     };
-}
-
-export function getGameObjsForScene(sceneDef: SceneDef): GameObject[] {
-    if (sceneDef.type === "static") {
-        return sceneDef.gameObjects;
-    }
-
-    return sceneDef.loader(SceneBuilder.getInstance());
 }
 
 // FIXME: dedupe w cassetteDef one - they're identical
@@ -73,24 +64,27 @@ function getCommonSceneObjVariables(sceneObj: GameObject): Variables {
     };
 }
 
-function sceneObjsToDynObjs(gameObjects: GameObject[]): DynoInst[] {
-    return gameObjects.map(gameObject => {
-        const variables = _.merge(
-            {},
-            getCommonSceneObjVariables(gameObject),
-            transformVariables(gameObject.variables, gameObject.badges)
-        );
+function sceneObjsToDynObjs(gameObjects?: GameObject[]): DynoInst[] {
+    if (!gameObjects) return [];
+    return gameObjects.map(gameObjToDyno);
+}
 
-        return {
-            id: gameObject.id,
-            uuid: uuidv4(),
-            variables,
-            eventHandlers: transformEventHandlers(gameObject.events),
-            face: gameObject.face, // should I clone / transform this at all?
-            helpers: transformHelpers(gameObject.helpers),
-            badges: transformBadges(gameObject.badges),
-        };
-    });
+export function gameObjToDyno(gameObject: GameObject): DynoInst {
+    const variables = _.merge(
+        {},
+        getCommonSceneObjVariables(gameObject),
+        transformVariables(gameObject.variables, gameObject.badges)
+    );
+
+    return {
+        id: gameObject.id,
+        uuid: uuidv4(),
+        variables,
+        eventHandlers: transformEventHandlers(gameObject.events),
+        face: gameObject.face, // should I clone / transform this at all?
+        helpers: transformHelpers(gameObject.helpers),
+        badges: transformBadges(gameObject.badges),
+    };
 }
 
 function transformVariables(

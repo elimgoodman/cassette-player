@@ -1,30 +1,31 @@
 import _ from "lodash";
 import {
-    Event,
     GetVariableArgs,
     GoToSceneArgs,
     MethodContext,
     SetVariableArgs,
     SquareFaceArgs,
 } from "./cassette-def";
+import { gameObjToDyno } from "./cassette-loading";
 import { DynoFinder } from "./dyno-finder";
 import { DynoManager } from "./dyno-manager";
 import { EventDispatcher } from "./event-dispatcher";
 import { DynoInst } from "./game-state";
+import { PrefabManager } from "./prefab-manager";
 import { SceneManager } from "./scene-manager";
 
 export class MethodContextMaker {
     private dynoFinder: DynoFinder;
-    private sceneManager: SceneManager;
+    // private sceneManager: SceneManager;
     private dynoManager: DynoManager;
+    private prefabManager: PrefabManager;
+    // private eventDispatcher: EventDispatcher;
 
     private static instance: MethodContextMaker;
-    private static eventDispatcher: EventDispatcher;
 
     static getInstance() {
         if (!MethodContextMaker.instance) {
             MethodContextMaker.instance = new MethodContextMaker();
-            MethodContextMaker.eventDispatcher = EventDispatcher.getInstance();
         }
 
         return MethodContextMaker.instance;
@@ -32,14 +33,18 @@ export class MethodContextMaker {
 
     private constructor() {
         this.dynoFinder = DynoFinder.getInstance();
-        this.sceneManager = SceneManager.getInstance();
+        // this.sceneManager = SceneManager.getInstance();
         this.dynoManager = DynoManager.getInstance();
+        this.prefabManager = PrefabManager.getInstance();
+        // this.eventDispatcher = EventDispatcher.getInstance();
     }
 
     public make(dynObj: DynoInst): MethodContext {
         const context: MethodContext = {
             actions: {
-                fireEvent: MethodContextMaker.fireEvent.bind(dynObj),
+                fireEvent: event => {
+                    EventDispatcher.getInstance().dispatch(event);
+                },
                 getVariable: MethodContextMaker.getVariable.bind(dynObj),
                 goToScene: args => this.goToScene(args),
                 setVariable: MethodContextMaker.setVariable.bind(dynObj),
@@ -56,6 +61,29 @@ export class MethodContextMaker {
                         path,
                         value: updater(old),
                     });
+                },
+                spawn: args => {
+                    const { variables, gameObject, id } = args;
+                    const obj = _.cloneDeep(gameObject);
+                    if (id) {
+                        obj.id = id;
+                    }
+
+                    // FIXME: yuckkkkkkkk
+                    // FIXME: this is totally fucked - fix this for real
+                    if (obj.variables && variables) {
+                        _.forEach(variables, (value, key) => {
+                            for (const variable of obj.variables!) {
+                                if (variable.name === key) {
+                                    variable.value = value;
+                                }
+                            }
+                        });
+                    }
+
+                    const dynoInst = gameObjToDyno(obj);
+                    this.dynoManager.add(dynoInst);
+                    return dynoInst;
                 },
             },
             currentScene: this.dynoManager.getSceneDyno(),
@@ -76,6 +104,7 @@ export class MethodContextMaker {
                 }),
             },
             dynos: this.dynoFinder,
+            prefabs: this.prefabManager,
         };
 
         return context;
@@ -94,12 +123,8 @@ export class MethodContextMaker {
         return object.variables[path];
     }
 
-    static fireEvent(event: Event) {
-        return MethodContextMaker.eventDispatcher.dispatch(event);
-    }
-
     private goToScene(args: GoToSceneArgs) {
         const { sceneId, variables } = args;
-        this.sceneManager.goToScene(sceneId, variables);
+        SceneManager.getInstance().goToScene(sceneId, variables);
     }
 }

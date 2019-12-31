@@ -116,7 +116,6 @@ const gameTile: GameObject = {
 
 const boardScene: SceneDef = {
     id: "game-board",
-    type: "static",
     variables: [
         {
             name: "boardState",
@@ -223,7 +222,6 @@ export const ticTacToe: CassetteDef = {
         boardScene,
         {
             id: "winner-screen",
-            type: "static",
             gameObjects: [
                 {
                     id: "winner-text",
